@@ -4,7 +4,8 @@ import { RouterOutlet } from '@angular/router';
 import { HttpClient } from "@angular/common/http";
 
 export interface Ping {
-  message: string;
+  id?: String,
+  Pong: string
 }
 
 @Component({
@@ -15,12 +16,24 @@ export interface Ping {
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  title = 'ping';
-  message: string | undefined;
+  title = 'ping pong stack verification';
+  insertId: string = "";
+  pong: Ping | undefined;
 
   constructor(private http: HttpClient) {}
 
   ngOnInit() {
-    this.http.get<Ping>("/api/ping").subscribe(res => this.message = res.message);
+    const ping: Ping = {
+      Pong: "pong"
+    }
+    this.http.post<any>("/api/ping", ping).subscribe(res => this.insertId = res.data.InsertedId);
+  }
+
+  getPing() {
+    if (this.insertId !== "") {
+      this.http.get<Ping>("/api/pong/" + this.insertId).subscribe(res => this.pong = res);
+    } else {
+      console.log("the requested ping is undefined")
+    }
   }
 }
