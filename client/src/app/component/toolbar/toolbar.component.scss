@@ -1,0 +1,12 @@
+#toolbar-div {
+    width: 100%;
+    background-color: honeydew;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2em;
+}
+
+#bpm-menu > label, #bpm-menu > input {
+    padding: 4px;
+}

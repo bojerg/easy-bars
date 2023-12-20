@@ -1,27 +1,36 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
+import { ToolbarComponent } from "./component/toolbar/toolbar.component";
+import { CanvasComponent } from "./component/canvas/canvas.component";
+/*
 import { HttpClient } from "@angular/common/http";
+
 
 export interface Ping {
   id?: String,
   Pong: string
 }
+*/
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [CommonModule, RouterOutlet],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+    selector: 'app-root',
+    standalone: true,
+    templateUrl: './app.component.html',
+    styleUrl: './app.component.scss',
+    imports: [CommonModule, RouterOutlet, ToolbarComponent, CanvasComponent]
 })
 export class AppComponent {
-  title = 'ping pong stack verification';
+  
+  title = 'Easy Bars';
+  /*
   insertId: string = "";
   pong: Ping | undefined;
+  */
 
-  constructor(private http: HttpClient) {}
+  constructor() {}
 
+  /*
   ngOnInit() {
     const ping: Ping = {
       Pong: "pong"
@@ -36,4 +45,5 @@ export class AppComponent {
       console.log("the requested ping is undefined")
     }
   }
+  */
 }
