@@ -1,21 +1,21 @@
 <div id="toolbar-div">
     <div id="playback-menu">
-    @if(!this.play) {
-        <button  type="button" id="play-pause-btn" (click)="this.play = true">▶️</button>
-        <button type="button" id="stop-btn" (click)="this.play = false">⏹️</button>
+    @if(!play) {
+        <button type="button" id="play-pause-btn" (click)="play = true; pause = false">▶️</button>
+        <button type="button" id="stop-btn" (click)="play = false; pause = false">⏹️</button>
     }
     @else {
-        <button type="button" id="play-pause-btn" (click)="this.play = false">⏸️</button>
-        <button type="button" id="stop-btn" (click)="this.play = false">⏹️</button>
+        <button type="button" id="play-pause-btn" (click)="play = false; pause = true">⏸️</button>
+        <button type="button" id="stop-btn" (click)="play = false; pause = false">⏹️</button>
     }   
     </div>
     <div id="bpm-menu">
         <label for="bpm-input">BPM</label>
-        <input style="width: 4em;" type="number" name="bpm-input" id="bpm-input" [value]="this.bpm" (input)="setBPM(bpmInput.value)" #bpmInput>
+        <input type="number" name="bpm-input" id="bpm-input" [value]="bpm" #bpmInput (input)="setBPM(bpmInput.value)">
         <label for="metronome">Metronome</label>
         <input type="checkbox" name="metronome" id="metronome">
     </div>
 </div>
 <div id="main-content">
-    <app-canvas></app-canvas>
+    <app-canvas [bpm]="bpm" [play]="play" [pause]="pause"></app-canvas>
 </div>

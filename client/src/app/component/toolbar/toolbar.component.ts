@@ -10,7 +10,9 @@ import { CanvasComponent } from "../canvas/canvas.component";
 })
 export class ToolbarComponent {
   bpm: number = 100.000;
+
   play: boolean = false;
+  pause: boolean = false;
 
   setBPM(val: any) {
     val = Number(val)

@@ -1,0 +1,19 @@
+.track {
+    height: 4em;
+    border-radius: 2px;
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: 1em;
+}
+
+.beat {
+    height: 100%;
+    width: 100px;
+    background-color: lightcyan;
+    border-left: 2px solid gainsboro;
+    border-radius: 2px;
+}
+
+.beat:nth-child(even) {
+    background-color: lightblue;
+}

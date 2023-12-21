@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { ToolbarComponent } from "./component/toolbar/toolbar.component";
 import { CanvasComponent } from "./component/canvas/canvas.component";
+import { HeaderComponent } from "./component/header/header.component";
 /*
 import { HttpClient } from "@angular/common/http";
 
@@ -18,7 +19,7 @@ export interface Ping {
     standalone: true,
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss',
-    imports: [CommonModule, RouterOutlet, ToolbarComponent, CanvasComponent]
+    imports: [CommonModule, RouterOutlet, ToolbarComponent, CanvasComponent, HeaderComponent]
 })
 export class AppComponent {
   
