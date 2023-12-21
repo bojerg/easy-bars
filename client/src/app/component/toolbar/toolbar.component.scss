@@ -1,16 +1,41 @@
-#toolbar-div {
+:host {
+    box-sizing: border-box;
+    display: block;
+    height: calc(100% - 4rem);
+}
+
+#toolbar {
     width: 100%;
-    background-color: honeydew;
+    background-color: rgba(255,255,255,0.08);
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 2em;
+    font-size: medium;
+    padding: 0.5em 0;
+    gap: 1.5em;
 }
 
 #bpm-menu > label, #bpm-menu > input {
     padding: 4px;
 }
 
-#bpmInput {
-    width: 4em;
+#bpm-input {
+    width: 3.5em;
+    color: yellowgreen;
+    font-size: large;
+    background-color: inherit;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+}
+
+button {
+    background-color: inherit;
+    border: 1px solid rgba(255, 255, 255, 0);
+    font-size: xx-large;
+}
+
+#main-tab-group {
+    background-color: rgba(255,255,255,0.05);
+    box-sizing: border-box;
+    height: inherit;
 }

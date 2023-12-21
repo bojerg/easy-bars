@@ -1,4 +1,4 @@
-<div id="toolbar-div">
+<mat-toolbar id="toolbar">
     <div id="playback-menu">
     @if(!play) {
         <button type="button" id="play-pause-btn" (click)="play = true; pause = false">▶️</button>
@@ -12,10 +12,22 @@
     <div id="bpm-menu">
         <label for="bpm-input">BPM</label>
         <input type="number" name="bpm-input" id="bpm-input" [value]="bpm" #bpmInput (input)="setBPM(bpmInput.value)">
+    </div>
+    <div id="metronome-div">
         <label for="metronome">Metronome</label>
         <input type="checkbox" name="metronome" id="metronome">
     </div>
-</div>
-<div id="main-content">
-    <app-canvas [bpm]="bpm" [play]="play" [pause]="pause"></app-canvas>
-</div>
+</mat-toolbar>
+<mat-tab-group id="main-tab-group">
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <span class="main-tab-label">Pages</span>
+        </ng-template>
+    </mat-tab>
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <span class="main-tab-label">Canvas</span>
+        </ng-template>
+        <app-canvas [bpm]="bpm" [play]="play" [pause]="pause"></app-canvas>
+    </mat-tab>
+</mat-tab-group>

@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { CanvasComponent } from "../canvas/canvas.component";
 
 @Component({
@@ -6,7 +8,11 @@ import { CanvasComponent } from "../canvas/canvas.component";
     standalone: true,
     templateUrl: './toolbar.component.html',
     styleUrl: './toolbar.component.scss',
-    imports: [CanvasComponent]
+    imports: [ 
+      CanvasComponent, 
+      MatTabsModule, 
+      MatToolbarModule
+    ]
 })
 export class ToolbarComponent {
   bpm: number = 100.000;
