@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { CanvasComponent } from "../canvas/canvas.component";
+import { Page } from '../../model/page';
 
 @Component({
     selector: 'app-toolbar',
@@ -16,9 +17,10 @@ import { CanvasComponent } from "../canvas/canvas.component";
 })
 export class ToolbarComponent {
   bpm: number = 100.000;
-
   play: boolean = false;
   pause: boolean = false;
+
+  pages: Page[] = [];
 
   setBPM(val: any) {
     val = Number(val)
@@ -33,5 +35,9 @@ export class ToolbarComponent {
     }
     
     this.bpm = Math.round(val * 1000) / 1000; // 3 decimals max
+  }
+
+  newPage() {
+    // open page modal
   }
 }

@@ -23,6 +23,16 @@
         <ng-template mat-tab-label>
             <span class="main-tab-label">Pages</span>
         </ng-template>
+        <div id="page-list">
+            <div class="page-chip" (click)="newPage()">
+                <div id="new-page-plus"></div>
+            </div>
+            @for(page of pages; track $index) {
+                <div class="page-chip">
+                    <p>{{ page.title }}</p>
+                </div>
+            }
+        </div>
     </mat-tab>
     <mat-tab>
         <ng-template mat-tab-label>
