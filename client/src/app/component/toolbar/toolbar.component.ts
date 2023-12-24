@@ -1,8 +1,11 @@
 import { Component } from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatDialog } from "@angular/material/dialog";
 import { CanvasComponent } from "../canvas/canvas.component";
+import { PageComponent } from '../page/page.component';
 import { Page } from '../../model/page';
+import { Phrase } from '../../model/phrase';
 
 @Component({
     selector: 'app-toolbar',
@@ -22,7 +25,9 @@ export class ToolbarComponent {
 
   pages: Page[] = [];
 
-  setBPM(val: any) {
+  constructor(private dialog: MatDialog) {}
+
+  setBPM(val: any): void {
     val = Number(val)
     if (typeof val !== "number" || !isFinite(val)) {
       alert("BPM must be a number"); return; 
@@ -37,7 +42,29 @@ export class ToolbarComponent {
     this.bpm = Math.round(val * 1000) / 1000; // 3 decimals max
   }
 
-  newPage() {
-    // open page modal
+  newPage(): void { 
+    let title = this.getNewPageTitle();
+    const lyrics: Phrase[] = [];
+    let page = new Page(title, lyrics, false)
+    this.pages.push(page);
+    this.openPage(page);
+  }
+
+  openPage(page: Page): void { 
+    const config = {
+      data: page,
+      minWidth: '95vw',
+      height: '91vh'
+    }
+
+    this.dialog.open(PageComponent, config);
+  }
+
+  /** Page #1, Page #2, ... until name is unique */
+  private getNewPageTitle(): string {
+    let i = 1; while (true) {
+      if (this.pages.some(page => page.title === "Page #" + i)) i++;
+      else return "Page #" + i;
+    }
   }
 }

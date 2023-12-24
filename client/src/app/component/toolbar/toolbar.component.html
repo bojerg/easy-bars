@@ -28,7 +28,7 @@
                 <div id="new-page-plus"></div>
             </div>
             @for(page of pages; track $index) {
-                <div class="page-chip">
+                <div class="page-chip" (click)="openPage(page)">
                     <p>{{ page.title }}</p>
                 </div>
             }

@@ -42,8 +42,10 @@ button {
 
 #page-list {
     display: flex;
+    justify-content: left;
     padding: 1rem;
     gap: 1rem;
+    flex-wrap: wrap;
 }
 
 .page-chip {
@@ -52,6 +54,13 @@ button {
     border-radius: 1em;
     height: 8rem;
     width: 8rem;
+}
+
+.page-chip > p {
+    padding-top: 3rem;
+    text-align: center;
+    font-size: medium;
+    font-weight: 500;
 }
 
 #new-page-plus {
@@ -63,6 +72,7 @@ button {
     left: 3.6rem;
     top: 1.8rem;
 }
+
 #new-page-plus:after {
     background: #AA1851;
     content: "";
