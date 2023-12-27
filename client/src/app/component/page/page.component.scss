@@ -1,3 +1,36 @@
 #page-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
+}
+
+#page-text {
+  resize: none;
+  overflow: scroll;
+  font-size: x-large;
+}
+
+#page-header-div {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+#page-title {
+  font-size: xx-large;
+}
+
+#page-close {
+  float: right;
+  margin-right: 1rem;
+  font-size: x-large;
+  border: none;
+  background: inherit;
+  color: whitesmoke;
+}
+
+#edit-title-btn {
+  font-size: x-large;
+  border: none;
+  background: inherit;
 }
