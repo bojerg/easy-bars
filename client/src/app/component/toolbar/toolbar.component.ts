@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDialog } from "@angular/material/dialog";
+import { Howl, Howler } from 'howler';
 import { CanvasComponent } from "../canvas/canvas.component";
 import { PageComponent } from '../page/page.component';
 import { Page } from '../../model/page';
@@ -21,11 +22,29 @@ import { Phrase } from '../../model/phrase';
 export class ToolbarComponent {
   bpm: number = 100.000;
   play: boolean = false;
-  pause: boolean = false;
+
+  sound = new Howl({
+    src: ['../../../assets/83 goopy.mp3'],
+  });
 
   pages: Page[] = [];
 
   constructor(private dialog: MatDialog) {}
+
+  playFn(): void {
+    this.play = true;
+    this.sound.play();
+  }
+
+  pauseFn(): void {
+    this.play = false;
+    this.sound.pause();
+  }
+
+  stopFn(): void {
+    this.play = false;
+    this.sound.stop();
+  }
 
   setBPM(val: any): void {
     val = Number(val)

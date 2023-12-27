@@ -1,12 +1,12 @@
 <mat-toolbar id="toolbar">
     <div id="playback-menu">
     @if(!play) {
-        <button type="button" id="play-pause-btn" (click)="play = true; pause = false">▶️</button>
-        <button type="button" id="stop-btn" (click)="play = false; pause = false">⏹️</button>
+        <button type="button" id="play-pause-btn" (click)="this.playFn()">▶️</button>
+        <button type="button" id="stop-btn" (click)="this.stopFn()">⏹️</button>
     }
     @else {
-        <button type="button" id="play-pause-btn" (click)="play = false; pause = true">⏸️</button>
-        <button type="button" id="stop-btn" (click)="play = false; pause = false">⏹️</button>
+        <button type="button" id="play-pause-btn" (click)="this.pauseFn()">⏸️</button>
+        <button type="button" id="stop-btn" (click)="this.stopFn()">⏹️</button>
     }   
     </div>
     <div id="bpm-menu">
@@ -16,6 +16,9 @@
     <div id="metronome-div">
         <label for="metronome">Metronome</label>
         <input type="checkbox" name="metronome" id="metronome">
+    </div>
+    <div id="mp3-info">
+        <!-- https://blog.angular-university.io/angular-file-upload/ -->
     </div>
 </mat-toolbar>
 <mat-tab-group id="main-tab-group">
@@ -38,6 +41,6 @@
         <ng-template mat-tab-label>
             <span class="main-tab-label">Canvas</span>
         </ng-template>
-        <app-canvas [bpm]="bpm" [play]="play" [pause]="pause"></app-canvas>
+        <app-canvas [bpm]="bpm" [play]="play"></app-canvas>
     </mat-tab>
 </mat-tab-group>
