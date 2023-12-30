@@ -1,12 +1,33 @@
 <div>
+    <div class="track" id="beat-track">
+        <div class="track-label-container">
+            <span class="track-label">
+                Beat Label
+            </span>
+        </div>
+        @for (bar of bars; track $index) {
+            <div class="beat" id="first-beat"></div>
+            <div class="beat"></div>
+            <div class="beat"></div>
+            <div class="beat"></div>
+        }
+    </div>
     <div class="track">
+        <div class="track-label-container">
+            <span class="track-label">
+                Lyric Track Label
+            </span>
+        </div>
         @for (bar of bars; track $index) {
             <div class="beat" id="first-beat"></div>
             <div class="beat"></div>
             <div class="beat"></div>
             <div class="beat"></div>
         } 
-        </div>
+    </div>
+    <div class="track" id="add-track">
+        <div id="new-track-plus"></div>
+    </div>
 </div>
 
 
