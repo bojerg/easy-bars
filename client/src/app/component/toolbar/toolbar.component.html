@@ -21,26 +21,4 @@
         <!-- https://blog.angular-university.io/angular-file-upload/ -->
     </div>
 </mat-toolbar>
-<mat-tab-group id="main-tab-group">
-    <mat-tab>
-        <ng-template mat-tab-label>
-            <span class="main-tab-label">Pages</span>
-        </ng-template>
-        <div id="page-list">
-            <div class="page-chip" (click)="newPage()">
-                <div id="new-page-plus"></div>
-            </div>
-            @for(page of pages; track $index) {
-                <div class="page-chip" (click)="openPage(page)">
-                    <p>{{ page.title }}</p>
-                </div>
-            }
-        </div>
-    </mat-tab>
-    <mat-tab>
-        <ng-template mat-tab-label>
-            <span class="main-tab-label">Canvas</span>
-        </ng-template>
-        <app-canvas [bpm]="bpm" [play]="play"></app-canvas>
-    </mat-tab>
-</mat-tab-group>
+<app-canvas [bpm]="bpm" [play]="play"></app-canvas>
