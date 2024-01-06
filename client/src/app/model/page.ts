@@ -1,13 +1,15 @@
 import { Phrase } from "./phrase";
 
 export class Page {
+    id: number;
     title: string;
     lyrics: Phrase[];
     hasFlow: boolean;
     startsOn: number;
     duration: number;
 
-    constructor(title: string, lyrics: Phrase[], hasFlow: boolean) {
+    constructor(id: number, title: string, lyrics: Phrase[], hasFlow: boolean) {
+        this.id = id;
         this.title = title;
         this.lyrics = lyrics;
         this.hasFlow = hasFlow;

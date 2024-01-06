@@ -2,8 +2,7 @@
   <div id="page-header-div">
     <button id="page-close" mat-raised-button color="primary" (click)="this.dialogRef.close()">X</button>
     <div>
-      <input type="text" name="page-title" id="page-title" placeholder="{{page.title}}">
-      <button id="edit-title-btn">✏️</button>
+      <input type="text" name="page-title" id="page-title" placeholder="{{page.title}}" (change)="saveTitle(title.value)" #title>
     </div>   
   </div>
   <textarea name="page-text" id="page-text" cols="{{this.screenWidth / 12}}" rows="{{this.screenHeight / 28}}"></textarea>

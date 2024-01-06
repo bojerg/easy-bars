@@ -1,8 +1,10 @@
 import { Component, HostListener, Input } from '@angular/core';
-import { Phrase } from '../../model/phrase';
 import { Page } from '../../model/page';
 import { PageComponent } from '../page/page.component';
 import { MatDialog } from '@angular/material/dialog';
+import { Canvas } from '../../model/canvas';
+import { ProjectService } from '../../service/project.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-canvas',
@@ -20,17 +22,24 @@ export class CanvasComponent {
 
   bars: number[] = [];
   barsPerRow: any;
-  pages: Page[] = [];
+  
+  canvasSub: Subscription = new Subscription;
+  canvas: Canvas = new Canvas([]);
 
-  constructor(private dialog: MatDialog) {}
+  constructor(private dialog: MatDialog, private projectService: ProjectService) {}
 
   ngOnInit() {
+    this.projectService.canvas.subscribe(canvas => this.canvas = canvas);
     this.calculateBarsPerRow();
 
     // temporary number in lieu of object oriented approach
     for(let i = 1; i <= 17; i++) {
       this.bars.push(i);
     }
+  }
+
+  ngOnDestroy() {
+    this.canvasSub.unsubscribe();
   }
   
   @HostListener('window:resize', ['$event'])
@@ -43,10 +52,7 @@ export class CanvasComponent {
   }
 
   newPage(): void { 
-    let title = this.getNewPageTitle();
-    const lyrics: Phrase[] = [];
-    let page = new Page(title, lyrics, false)
-    this.pages.push(page);
+    let page = this.canvas.getNewPage();
     this.openPage(page);
   }
 
@@ -60,11 +66,4 @@ export class CanvasComponent {
     this.dialog.open(PageComponent, config);
   }
 
-  /** Page #1, Page #2, ... until name is unique */
-  private getNewPageTitle(): string {
-    let i = 1; while (true) {
-      if (this.pages.some(page => page.title === "Page #" + i)) i++;
-      else return "Page #" + i;
-    }
-  }
 }
