@@ -48,7 +48,8 @@ export class PageComponent {
   }
 
   saveText(text: string): void {
-    //TODO: set up to save every 20s or on dialog exit... and actually process phrasing
+    //TODO: set up to save every 20s or on dialog exit... and actually process phrasing, create new phrases for added words and remove any that don't fit...
+    // May need to include warnings or something for when flow information will be deleted due to added changes or add an edit word button to the edit flow section
     this.page.lyrics[0] = new Phrase(text, 4);
   }
 
