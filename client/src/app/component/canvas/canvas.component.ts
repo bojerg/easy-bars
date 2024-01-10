@@ -24,7 +24,7 @@ export class CanvasComponent {
   barsPerRow: any;
   
   canvasSub: Subscription = new Subscription;
-  canvas: Canvas = new Canvas([]);
+  canvas!: Canvas;
 
   constructor(private dialog: MatDialog, private projectService: ProjectService) {}
 
@@ -52,7 +52,7 @@ export class CanvasComponent {
   }
 
   newPage(): void { 
-    let page = this.canvas.getNewPage();
+    let page = this.canvas.addNewPage();
     this.openPage(page);
   }
 

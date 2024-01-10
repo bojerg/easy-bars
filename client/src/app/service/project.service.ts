@@ -18,7 +18,7 @@ export class ProjectService {
   }
 
   updatePage(page: Page) {
-    let newCanvas = new Canvas([]);
+    let newCanvas!: Canvas;
     this.canvas.subscribe(canvas => {
       canvas.updatePage(page);
       newCanvas = canvas;

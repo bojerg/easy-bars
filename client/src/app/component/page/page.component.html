@@ -2,9 +2,15 @@
   <div id="page-header-div">
     <button id="page-close" mat-raised-button color="primary" (click)="this.dialogRef.close()">X</button>
     <div>
-      <input type="text" name="page-title" id="page-title" placeholder="{{page.title}}" (change)="saveTitle(title.value)" #title>
+      <input type="text" name="page-title" id="page-title" placeholder="{{placeholderTitle}}" (change)="saveTitle(title.value)" (click)="placeholderTitle = ''" (blur)="placeholderTitle = page.title" #title>
     </div>   
   </div>
-  <textarea name="page-text" id="page-text" cols="{{this.screenWidth / 12}}" rows="{{this.screenHeight / 28}}"></textarea>
-  
+  <mat-tab-group animationDuration="0ms">
+    <mat-tab label="Notepad">
+      <textarea name="page-text" id="page-text" cols="{{this.screenWidth / 14}}" rows="{{this.screenHeight / 32}}" (change)="saveText(pageText.value)" #pageText>{{ renderPhrasesToTextarea() }}</textarea>
+    </mat-tab>
+    <mat-tab label="Edit Flow">
+      <p>WIP</p>
+    </mat-tab>
+  </mat-tab-group>
 </div>

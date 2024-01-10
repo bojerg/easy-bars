@@ -17,14 +17,29 @@
 }
 
 #page-title {
-  font-size: xx-large;
+  font-size: x-large;
+  width: 10em;
+  text-align: center;
+  background-color: rgba(255,255,255,0.08);
+  color: inherit;
+  border: none;
+  border-radius: 4px;
+}
+
+::placeholder {
+  color: whitesmoke !important;
+  opacity: 0.9;
 }
 
 #page-close {
   float: right;
-  margin-right: 1rem;
+  margin-right: 1.5rem;
   font-size: x-large;
   border: none;
   background: inherit;
-  color: whitesmoke;
+  color: inherit;
+}
+
+mat-tab-group {
+  width: 100%;
 }
