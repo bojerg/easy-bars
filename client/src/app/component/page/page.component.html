@@ -10,7 +10,18 @@
       <textarea name="page-text" id="page-text" cols="{{this.screenWidth / 14}}" rows="{{this.screenHeight / 32}}" (change)="saveText(pageText.value)" #pageText>{{ renderPhrasesToTextarea() }}</textarea>
     </mat-tab>
     <mat-tab label="Edit Flow">
-      <p>WIP</p>
+      <button (click)="splitLyricsByWord()">Split by Word</button>
+      <div id="lyric-cards-container">
+      @for (phrase of page.lyrics; track $index;) {
+        @if($first) { {{resetBeatCount()}} }
+        <mat-card>
+          <mat-card-content>{{ phrase.content }}</mat-card-content>
+        </mat-card>
+        @if (isNextBar(phrase.duration)) { <p>HW</p><!--<div class="break"></div>--> }
+      } @empty {
+        <p style="text-align: center;">No lyrics to edit</p>
+      }
+      </div>
     </mat-tab>
   </mat-tab-group>
 </div>

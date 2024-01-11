@@ -14,7 +14,7 @@
         }
     </div>
 
-    @for(page of canvas.tracks; track $index) {
+    @for(page of canvas.tracks; track page.id) {
         <div class="track" (click)="openPage(page)">
             <div class="track-label-container">
                 <span class="track-label">

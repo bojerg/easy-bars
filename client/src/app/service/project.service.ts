@@ -16,14 +16,5 @@ export class ProjectService {
   updateProject(canvas: Canvas) {
     this.projectSource.next(canvas);
   }
-
-  updatePage(page: Page) {
-    let newCanvas!: Canvas;
-    this.canvas.subscribe(canvas => {
-      canvas.updatePage(page);
-      newCanvas = canvas;
-    }).unsubscribe();
-    
-    this.updateProject(newCanvas);
-  } 
+  
 }

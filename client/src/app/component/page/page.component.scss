@@ -40,6 +40,18 @@
   color: inherit;
 }
 
+#lyric-cards-container {
+  display: flex;
+}
+
 mat-tab-group {
   width: 100%;
+}
+
+/* Inserting this collapsed row between two flex items will make 
+ * the flex item that comes after it break to a new row 
+ * https://tobiasahlin.com/blog/flexbox-break-to-new-row/ */
+ .break {
+  flex-basis: 100%;
+  height: 0;
 }

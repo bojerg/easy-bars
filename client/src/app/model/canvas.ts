@@ -9,15 +9,6 @@ export class Canvas {
         if(tracks.length === 0) this.addNewPage();
     }
 
-    updatePage(newPage: Page) {
-        const index = this.tracks.findIndex(page => page.id === newPage.id);
-        if (index === -1) {
-            this.tracks.push(newPage);
-        } else {
-            this.tracks[index] = newPage;
-        }
-    }
-
     /** Pushes new page to tracks: Page[] and returns the new page */
     addNewPage(): Page {
         // Generate unqiue default title
