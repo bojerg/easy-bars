@@ -14,10 +14,17 @@
       <div id="lyric-cards-container">
       @for (phrase of page.lyrics; track $index;) {
         @if($first) { {{resetBeatCount()}} }
-        <mat-card>
-          <mat-card-content>{{ phrase.content }}</mat-card-content>
-        </mat-card>
-        @if (isNextBar(phrase.duration)) { <p>HW</p><!--<div class="break"></div>--> }
+        @if (isNextBar(phrase.duration)) { 
+          <mat-card>
+            <mat-card-content>{{ phrase.content }} </mat-card-content>
+          </mat-card>
+          <div class="break"></div>
+        }
+        @else {
+          <mat-card>
+            <mat-card-content>{{ phrase.content }}</mat-card-content>
+          </mat-card>
+        }
       } @empty {
         <p style="text-align: center;">No lyrics to edit</p>
       }

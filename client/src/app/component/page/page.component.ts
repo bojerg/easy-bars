@@ -61,10 +61,10 @@ export class PageComponent {
   }
 
   splitLyricsByWord() {
-    this.resetBeatCount();
     let newLyrics: Phrase[] = [];
     this.page.lyrics.forEach( (phrase) => {
-        const words = phrase.content.split(" ");
+        const regex = new RegExp(/\s/, "g");
+        const words = phrase.content.split(regex);
         if(words.length > 1) words.forEach( word => newLyrics.push(new Phrase(word + " ", 1)));
         else newLyrics.push(new Phrase(words[0], 1));
     });
