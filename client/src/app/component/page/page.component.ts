@@ -1,6 +1,6 @@
-import { Component, Inject, HostListener, Output, EventEmitter } from '@angular/core';
+import { Component, Inject, HostListener } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { MatTabsModule } from '@angular/material/tabs';
+import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { Page } from '../../model/page';
 import { Phrase } from '../../model/phrase';
@@ -8,7 +8,7 @@ import { Phrase } from '../../model/phrase';
 @Component({
   selector: 'app-page',
   standalone: true,
-  imports: [MatTabsModule, MatCardModule],
+  imports: [MatCardModule, MatIconModule],
   templateUrl: './page.component.html',
   styleUrl: './page.component.scss'
 })
@@ -46,12 +46,6 @@ export class PageComponent {
     }
   }
 
-  saveText(text: string): void {
-    //TODO: set up to save every 20s or on dialog exit... and actually process phrasing, create new phrases for added words and remove any that don't fit...
-    // May need to include warnings or something for when flow information will be deleted due to added changes or add an edit word button to the edit flow section
-    this.page.lyrics[0] = new Phrase(text, 4);
-  }
-
   renderPhrasesToTextarea(): string {
     let text = ""; this.page.lyrics.forEach( (phrase, i) => {
       if(i !== 0 && phrase.isEmpty()) text += "\n";
@@ -61,25 +55,42 @@ export class PageComponent {
   }
 
   splitLyricsByWord() {
+    const notWhitespace = new RegExp(/\S/);
     let newLyrics: Phrase[] = [];
     this.page.lyrics.forEach( (phrase) => {
-        const regex = new RegExp(/\s/, "g");
-        const words = phrase.content.split(regex);
-        if(words.length > 1) words.forEach( word => newLyrics.push(new Phrase(word + " ", 1)));
-        else newLyrics.push(new Phrase(words[0], 1));
+      let tempStr = "";
+      phrase.content.split("").forEach( (char, i) => {  
+        if(char.match(notWhitespace)) {
+          if(tempStr.slice(tempStr.length - 1).match(notWhitespace)) tempStr += char;
+          else {
+            newLyrics.push(new Phrase(tempStr, 0.5));
+            tempStr = char;
+          }
+        } else {
+          tempStr += char
+        }
+        if(i == phrase.content.length - 1) {
+          newLyrics.push(new Phrase(tempStr, 0.5));
+        }
+      });
     });
-    this.page.lyrics = newLyrics;
+    this.page.lyrics = newLyrics.slice(1);
   }
 
   isNextBar(duration: number): boolean {
     const previous = Math.floor(this.beat / 4);
     this.beat += duration;
-    console.log(Math.floor(this.beat / 4) + " vs " + previous);
     return Math.floor(this.beat / 4) !== previous;
   }
 
   resetBeatCount(): void {
     this.beat = 0;
+  }
+
+  editText(phrase: Phrase) {
+    //dummy function
+
+    // Need to dynamically change how the specific card is interactable
   }
 
 }

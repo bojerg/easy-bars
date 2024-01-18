@@ -5,30 +5,31 @@
       <input type="text" name="page-title" id="page-title" placeholder="{{placeholderTitle}}" (change)="saveTitle(title.value)" (click)="placeholderTitle = ''" (blur)="placeholderTitle = page.title" #title>
     </div>   
   </div>
-  <mat-tab-group animationDuration="0ms">
-    <mat-tab label="Notepad">
-      <textarea name="page-text" id="page-text" cols="{{this.screenWidth / 14}}" rows="{{this.screenHeight / 32}}" (change)="saveText(pageText.value)" #pageText>{{ renderPhrasesToTextarea() }}</textarea>
-    </mat-tab>
-    <mat-tab label="Edit Flow">
-      <button (click)="splitLyricsByWord()">Split by Word</button>
-      <div id="lyric-cards-container">
-      @for (phrase of page.lyrics; track $index;) {
-        @if($first) { {{resetBeatCount()}} }
-        @if (isNextBar(phrase.duration)) { 
-          <mat-card>
-            <mat-card-content>{{ phrase.content }} </mat-card-content>
-          </mat-card>
-          <div class="break"></div>
-        }
-        @else {
-          <mat-card>
-            <mat-card-content>{{ phrase.content }}</mat-card-content>
-          </mat-card>
-        }
-      } @empty {
-        <p style="text-align: center;">No lyrics to edit</p>
-      }
-      </div>
-    </mat-tab>
-  </mat-tab-group>
+  <button (click)="splitLyricsByWord()">Split by Word</button>
+  <div id="lyric-cards-container">
+  @for (phrase of page.lyrics; track $index;) {
+    @if($first) { {{resetBeatCount()}} }
+    @if (isNextBar(phrase.duration)) { 
+      <mat-card>
+        <mat-card-content>{{ phrase.content }}</mat-card-content>
+        <mat-card-actions>
+          <button mat-button (click)="editText(phrase)"><mat-icon>create</mat-icon></button>
+          <button mat-button><mat-icon>menu</mat-icon></button>
+        </mat-card-actions>
+      </mat-card>
+      <div class="break"></div>
+    }
+    @else {
+      <mat-card>
+        <mat-card-content>{{ phrase.content }}</mat-card-content>
+        <mat-card-actions>
+          <button mat-button (click)="editText(phrase)"><mat-icon>create</mat-icon></button>
+          <button mat-button><mat-icon>menu</mat-icon></button>
+        </mat-card-actions>
+      </mat-card>
+    }
+  } @empty {
+    <p style="text-align: center;">No lyrics to edit</p>
+  }
+  </div>
 </div>
