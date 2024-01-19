@@ -45,6 +45,24 @@
   flex-wrap: wrap;
 }
 
+.phrase-card {
+  min-width: 7rem;
+  height: 5rem;
+  background-color: rgba(255,255,255,0.05);
+}
+
+.phrase-card-actions {
+  float: bottom;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.phrase-input {
+  height: 2rem;
+  font-size: 1rem;
+}
+
 mat-tab-group {
   width: 100%;
 }

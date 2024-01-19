@@ -5,6 +5,18 @@ import { MatCardModule } from '@angular/material/card';
 import { Page } from '../../model/page';
 import { Phrase } from '../../model/phrase';
 
+/** 
+ * Simple interface to aid in controlling how to display the phrase currently being edited. 
+ * @param index - index of the phrase in page.lyrics array
+ * @param mode - flag for how to render phrase card
+ * @remarks Mode types anticipated are 'content' (simple input editor), 'notepad' (textarea for longer input), and 'split' (split phrase into smaller chunks). 
+ * This may be changed to numbers in the future.
+*/
+export interface ActivePhrase {
+  index: number,
+  mode: string
+}
+
 @Component({
   selector: 'app-page',
   standalone: true,
@@ -16,8 +28,13 @@ export class PageComponent {
 
   screenHeight: number = 0;
   screenWidth: number = 0;
-  beat: number = 0;
+  activePhrase: ActivePhrase = {
+    index: -1,
+    mode: ''
+  }
 
+  /** Used organize rows of phrases by bar length */
+  beat: number = 0;
   /** defined separately from the Page object's title for clear on click-- see component HTML at id page-title */
   placeholderTitle: string = "";
 
@@ -44,6 +61,14 @@ export class PageComponent {
       this.page.title = title;
       this.placeholderTitle = title;
     }
+  }
+
+  saveAndCloseContentEditor(content: string, index: number, prompt: boolean): void {
+    if(this.page.lyrics[index].content !== content) {
+      let save = prompt ? confirm("Would you like to save your changes?") : true;
+      if(save) this.page.lyrics[index].content = content;
+    }
+    this.activePhrase.mode = '';
   }
 
   renderPhrasesToTextarea(): string {
@@ -85,12 +110,6 @@ export class PageComponent {
 
   resetBeatCount(): void {
     this.beat = 0;
-  }
-
-  editText(phrase: Phrase) {
-    //dummy function
-
-    // Need to dynamically change how the specific card is interactable
   }
 
 }
