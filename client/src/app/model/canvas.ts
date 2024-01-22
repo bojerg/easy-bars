@@ -21,7 +21,7 @@ export class Canvas {
         i = 0; while(true) {
             if (this.tracks.some(page => page.id === i)) i++;
             else {
-                const page = new Page(i, title, [new Phrase("", 4)])
+                const page = new Page(i, title, [])
                 this.tracks.push(page);
                 return page;
             }

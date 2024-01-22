@@ -14,7 +14,7 @@ import { Phrase } from '../../model/phrase';
 */
 export interface ActivePhrase {
   index: number,
-  mode: string
+  mode: string,
 }
 
 @Component({
@@ -45,6 +45,10 @@ export class PageComponent {
   ) { 
     this.onResize();
     this.placeholderTitle = page.title;
+  }
+
+  addPhrase(): void {
+    this.page.lyrics.push(new Phrase('', 2));
   }
 
   /** Ensure page dialog fills majority of usable screen space on window resize */
@@ -110,6 +114,11 @@ export class PageComponent {
 
   resetBeatCount(): void {
     this.beat = 0;
+  }
+
+  toggleActive(index: number): void {
+    if(this.activePhrase.mode === '' && this.activePhrase.index === index) this.activePhrase.index = -1;
+    else this.activePhrase.index = index;
   }
 
 }

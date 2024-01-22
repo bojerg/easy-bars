@@ -1,18 +1,29 @@
 <div id="page-container">
   <div id="page-header-div">
-    <button id="page-close" mat-raised-button color="primary" (click)="this.dialogRef.close()">X</button>
+    <button id="page-close" mat-raised-button color="primary" (click)="this.dialogRef.close()"><mat-icon>close</mat-icon></button>
     <div>
       <input type="text" name="page-title" id="page-title" placeholder="{{placeholderTitle}}" (change)="saveTitle(title.value)" (click)="placeholderTitle = ''" (blur)="placeholderTitle = page.title" #title>
     </div>   
   </div>
+  <!-- Toolbar here -->
   <button (click)="splitLyricsByWord()">Split by Word</button>
+
   <div id="lyric-cards-container">
   @for (phrase of page.lyrics; track $index) {
+
     @if($first) { {{resetBeatCount()}} }
-    <mat-card class="phrase-card" (click)="this.activePhrase.index = $index; this.activePhrase.mode = ''">
+    @if(activePhrase.mode === 'notepad' && activePhrase.index === $index && !$first) {
+      <div class="break"></div>
+    }
+
+    <mat-card class="phrase-card" (click)="toggleActive($index)">
+      
       @if(this.activePhrase.index === $index) {
         @if(this.activePhrase.mode === 'content') {
           <input type="text" name="phrase-input" class="phrase-input" value="{{ phrase.content }}" (keydown.enter)="saveAndCloseContentEditor(active.value, $index, false)" (blur)="saveAndCloseContentEditor(active.value, $index, true)" #active>
+        }
+        @else if (this.activePhrase.mode === 'notepad') {
+          <textarea name="phrase-textarea" id="phrase-textarea" cols="{{ screenWidth / 8 }}" rows="{{ screenHeight / 25 }}" value="{{ phrase.content }}" (blur)="saveAndCloseContentEditor(active.value, $index, true)" #active></textarea>
         }
         @else {
           <mat-card-content class="phrase-input">{{ phrase.content }}</mat-card-content>
@@ -27,15 +38,20 @@
           <button mat-button><mat-icon>menu</mat-icon></button>
         </mat-card-actions>
       }
+
     </mat-card>
-    @if (isNextBar(phrase.duration)) { 
+
+    @if (isNextBar(phrase.duration) || (activePhrase.mode === 'notepad' && activePhrase.index === $index)) { 
       <div class="break"></div> 
     }  
-  } @empty {
-    <p style="text-align: center;">No lyrics to edit</p>
-  }
-    <mat-card>
-      <mat-card-title><button>Add new</button></mat-card-title>
+  } 
+
+    <div class="break"></div>
+    <mat-card id="add-new-phrase-card">
+      <mat-card-content>
+        <button id="add-new-phrase-btn" (click)="addPhrase(); activePhrase.index = page.lyrics.length - 1; activePhrase.mode = 'notepad'"><mat-icon inline="true">add</mat-icon></button>
+      </mat-card-content>
     </mat-card>
+
   </div>
 </div>

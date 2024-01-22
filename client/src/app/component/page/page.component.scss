@@ -40,14 +40,32 @@
   color: inherit;
 }
 
+#add-new-phrase-card > mat-card-content {
+  padding: 0 0.5rem;
+}
+
+#add-new-phrase-btn {
+  background-color: inherit;
+  border: none;
+  padding: 0;
+}
+
+#add-new-phrase-btn > mat-icon {
+  color: #AA1851;
+  font-size: 4rem;
+}
+
 #lyric-cards-container {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
+  padding-top: 1rem;
+  row-gap: 0.25rem;
 }
 
 .phrase-card {
-  min-width: 7rem;
-  height: 5rem;
+  min-width: 6rem;
+  min-height: 4rem;
   background-color: rgba(255,255,255,0.05);
 }
 
@@ -67,10 +85,11 @@ mat-tab-group {
   width: 100%;
 }
 
-/* Inserting this collapsed row between two flex items will make 
- * the flex item that comes after it break to a new row 
- * https://tobiasahlin.com/blog/flexbox-break-to-new-row/ */
- .break {
+.break {
   flex-basis: 100%;
   height: 0;
+}
+
+textarea {
+  resize: none;
 }
