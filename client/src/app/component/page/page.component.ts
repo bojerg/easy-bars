@@ -2,6 +2,7 @@ import { Component, Inject, HostListener } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
+import { MatMenuModule } from '@angular/material/menu'; 
 import { Page } from '../../model/page';
 import { Phrase } from '../../model/phrase';
 
@@ -9,18 +10,20 @@ import { Phrase } from '../../model/phrase';
  * Simple interface to aid in controlling how to display the phrase currently being edited. 
  * @param index - index of the phrase in page.lyrics array
  * @param mode - flag for how to render phrase card
+ * @param stepSize - duraton slider step size. Used as a multiple for min and max setting of #timeSlider
  * @remarks Mode types anticipated are 'content' (simple input editor), 'notepad' (textarea for longer input), and 'split' (split phrase into smaller chunks). 
  * This may be changed to numbers in the future.
 */
 export interface ActivePhrase {
   index: number,
   mode: string,
+  stepSize: number,
 }
 
 @Component({
   selector: 'app-page',
   standalone: true,
-  imports: [MatCardModule, MatIconModule],
+  imports: [MatCardModule, MatIconModule, MatMenuModule],
   templateUrl: './page.component.html',
   styleUrl: './page.component.scss'
 })
@@ -29,8 +32,9 @@ export class PageComponent {
   screenHeight: number = 0;
   screenWidth: number = 0;
   activePhrase: ActivePhrase = {
-    index: -1,
-    mode: ''
+    index: 0,
+    mode: '',
+    stepSize: 0.0625
   }
 
   /** Used organize rows of phrases by bar length */
@@ -48,7 +52,7 @@ export class PageComponent {
   }
 
   addPhrase(): void {
-    this.page.lyrics.push(new Phrase('', 2));
+    this.page.lyrics.push(new Phrase('Test', 0.5));
   }
 
   /** Ensure page dialog fills majority of usable screen space on window resize */
@@ -56,6 +60,20 @@ export class PageComponent {
   onResize(_event?: undefined) {
    this.screenHeight = window.innerHeight;
    this.screenWidth = window.innerWidth;
+  }
+
+  timeMenuSetDefault(): void {
+    this.activePhrase.stepSize = 0.0625;
+  }
+
+  timeMenuToggleStep(): void {
+    if(this.activePhrase.stepSize == 0.0625) this.activePhrase.stepSize *= 8;
+    else this.activePhrase.stepSize /= 8;
+  }
+
+  timeMenuGetStepContext(): string {
+    if(this.activePhrase.stepSize == 0.0625) return "Big steps";
+    return "Small steps";
   }
 
   saveTitle(title: string): void {
@@ -75,15 +93,16 @@ export class PageComponent {
     this.activePhrase.mode = '';
   }
 
-  renderPhrasesToTextarea(): string {
-    let text = ""; this.page.lyrics.forEach( (phrase, i) => {
-      if(i !== 0 && phrase.isEmpty()) text += "\n";
-      else text += phrase.content;
-    });
-    return text;
+  deletePhrase(index: number) {
+    if(confirm("Are you sure you would like to delete this phrase?")) this.page.lyrics.splice(index, 1);
   }
 
-  splitLyricsByWord() {
+  duplicatePhrase(index: number) {
+    let duplicate = new Phrase(this.page.lyrics[index].content, this.page.lyrics[index].duration);
+    this.page.lyrics.splice(index, 0, duplicate);
+  }
+
+  splitLyricsByWord() { // needs rework
     const notWhitespace = new RegExp(/\S/);
     let newLyrics: Phrase[] = [];
     this.page.lyrics.forEach( (phrase) => {
@@ -92,7 +111,7 @@ export class PageComponent {
         if(char.match(notWhitespace)) {
           if(tempStr.slice(tempStr.length - 1).match(notWhitespace)) tempStr += char;
           else {
-            newLyrics.push(new Phrase(tempStr, 0.5));
+            if(tempStr.trim() !== '') newLyrics.push(new Phrase(tempStr, 0.5));
             tempStr = char;
           }
         } else {
@@ -106,14 +125,11 @@ export class PageComponent {
     this.page.lyrics = newLyrics.slice(1);
   }
 
-  isNextBar(duration: number): boolean {
+  isNextBar(duration: number, first: boolean): boolean {
+    if(first) this.beat = 0;
     const previous = Math.floor(this.beat / 4);
     this.beat += duration;
-    return Math.floor(this.beat / 4) !== previous;
-  }
-
-  resetBeatCount(): void {
-    this.beat = 0;
+    return this.beat / 4 >= previous + 1;
   }
 
   toggleActive(index: number): void {
