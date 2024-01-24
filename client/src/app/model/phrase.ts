@@ -25,17 +25,4 @@ export class Phrase {
         return (wholeStr + " " + fractionStr).trim();
     }
 
-    public getBeatsFromInput(input: number): string {
-        const whole = Math.floor(input);
-        const fraction = input - whole;
-        const wholeStr = whole > 0 ? whole.toString() : "";
-        
-        // https://stackoverflow.com/questions/4652468/is-there-a-javascript-function-that-reduces-a-fraction
-        var gcd = function(a:number, b:number): number {
-            return b ? gcd(b, a%b) : a;
-        }
-        const fractionStr = fraction == 0 ? "" : ((fraction/0.0625)/gcd(16, fraction/0.0625)).toString() + "/" + (16/gcd(16, fraction/0.0625)).toString();
-
-        return (wholeStr + " " + fractionStr).trim();
-    }
 }

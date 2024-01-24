@@ -69,6 +69,10 @@
   background-color: rgba(255,255,255,0.05);
 }
 
+.phrase-card > *{
+  padding-bottom: 0.5rem;
+}
+
 .phrase-card-actions {
   float: bottom;
   display: flex;
@@ -86,8 +90,9 @@
   font-size: x-large;
 }
 
-mat-tab-group {
-  width: 100%;
+#time-slider-label {
+  display: flex;
+  justify-content: space-between;
 }
 
 .break {

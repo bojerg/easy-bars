@@ -1,4 +1,4 @@
-import { Component, Inject, HostListener } from '@angular/core';
+import { Component, Inject, HostListener, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
@@ -17,7 +17,7 @@ import { Phrase } from '../../model/phrase';
 export interface ActivePhrase {
   index: number,
   mode: string,
-  stepSize: number,
+  stepSize: number
 }
 
 @Component({
@@ -51,9 +51,7 @@ export class PageComponent {
     this.placeholderTitle = page.title;
   }
 
-  addPhrase(): void {
-    this.page.lyrics.push(new Phrase('Test', 0.5));
-  }
+  @ViewChild('active') lyricInput: any;
 
   /** Ensure page dialog fills majority of usable screen space on window resize */
   @HostListener('window:resize', ['$event'])
@@ -62,18 +60,17 @@ export class PageComponent {
    this.screenWidth = window.innerWidth;
   }
 
-  timeMenuSetDefault(): void {
-    this.activePhrase.stepSize = 0.0625;
+  addPhrase(): void {
+    this.page.lyrics.push(new Phrase('Test', 0.5));
   }
 
-  timeMenuToggleStep(): void {
-    if(this.activePhrase.stepSize == 0.0625) this.activePhrase.stepSize *= 8;
-    else this.activePhrase.stepSize /= 8;
+  deletePhrase(index: number) {
+    if(confirm("Are you sure you would like to delete this phrase?")) this.page.lyrics.splice(index, 1);
   }
 
-  timeMenuGetStepContext(): string {
-    if(this.activePhrase.stepSize == 0.0625) return "Big steps";
-    return "Small steps";
+  duplicatePhrase(index: number) {
+    let duplicate = new Phrase(this.page.lyrics[index].content, this.page.lyrics[index].duration);
+    this.page.lyrics.splice(index, 0, duplicate);
   }
 
   saveTitle(title: string): void {
@@ -85,21 +82,9 @@ export class PageComponent {
     }
   }
 
-  saveAndCloseContentEditor(content: string, index: number, prompt: boolean): void {
-    if(this.page.lyrics[index].content !== content) {
-      let save = prompt ? confirm("Would you like to save your changes?") : true;
-      if(save) this.page.lyrics[index].content = content;
-    }
+  saveAndCloseContentEditor(index: number): void {
+    this.page.lyrics[index].content = this.lyricInput.nativeElement.value;
     this.activePhrase.mode = '';
-  }
-
-  deletePhrase(index: number) {
-    if(confirm("Are you sure you would like to delete this phrase?")) this.page.lyrics.splice(index, 1);
-  }
-
-  duplicatePhrase(index: number) {
-    let duplicate = new Phrase(this.page.lyrics[index].content, this.page.lyrics[index].duration);
-    this.page.lyrics.splice(index, 0, duplicate);
   }
 
   splitLyricsByWord() { // needs rework
@@ -135,6 +120,41 @@ export class PageComponent {
   toggleActive(index: number): void {
     if(this.activePhrase.mode === '' && this.activePhrase.index === index) this.activePhrase.index = -1;
     else this.activePhrase.index = index;
+  }
+
+  toggleContentMode(): void {
+    if(this.activePhrase.mode === 'content') this.activePhrase.mode = '';
+    else this.activePhrase.mode = 'content';
+  }
+
+  toggleTimeMode(): void {
+    if(this.activePhrase.mode === 'time') this.activePhrase.mode = '';
+    else {
+      this.activePhrase.mode = 'time';
+      this.activePhrase.stepSize = 0.0625;
+    } 
+  }
+
+  timeCtrlToggleStep(): void {
+    if(this.activePhrase.stepSize == 0.0625) this.activePhrase.stepSize *= 8;
+    else this.activePhrase.stepSize /= 8;
+  }
+
+  timeCtrlGetStepContext(): string {
+    if(this.activePhrase.stepSize == 0.0625) return "Big steps";
+    return "Small steps";
+  }
+
+  timeNotchUp(index: number): void {    
+    if(this.page.lyrics[index].duration < this.activePhrase.stepSize * 128) {
+      this.page.lyrics[index].duration += this.activePhrase.stepSize;
+    }
+  }
+
+  timeNotchDown(index: number): void {
+    if(this.page.lyrics[index].duration > this.activePhrase.stepSize) {
+      this.page.lyrics[index].duration -= this.activePhrase.stepSize;
+    }
   }
 
 }
