@@ -1,16 +1,19 @@
 <div id="page-container">
-  <div id="page-header-div">
+  <mat-toolbar id="page-toolbar" (click)="activePhrase.index = -1">
+    <input type="text" name="page-title" id="page-title" placeholder="{{placeholderTitle}}" (change)="saveTitle(title.value)" (click)="placeholderTitle = ''" (blur)="placeholderTitle = page.title" #title>
+    <div id="page-tools">
+      <div id="undo-redo">
+        <button disabled><mat-icon inline="true">undo</mat-icon></button>
+        <button disabled><mat-icon inline="true">redo</mat-icon></button>
+      </div>
+      <button (click)="splitLyricsByWord()">Split by Word</button>
+      <button (click)="deleteAll()">Delete All</button>
+    </div>
     <button id="page-close" mat-raised-button color="primary" (click)="dialogRef.close()"><mat-icon>close</mat-icon></button>
-    <div>
-      <input type="text" name="page-title" id="page-title" placeholder="{{placeholderTitle}}" (change)="saveTitle(title.value)" (click)="placeholderTitle = ''" (blur)="placeholderTitle = page.title" #title>
-    </div>   
-  </div>
-  <!-- Toolbar here -->
-  <button (click)="splitLyricsByWord()">Split by Word</button>
+  </mat-toolbar> 
 
   <div id="lyric-cards-container">
   @for (phrase of page.lyrics; track $index) {
-
 
     @if(activePhrase.mode === 'notepad' && activePhrase.index === $index && !$first) {
       <div class="break"></div>
@@ -61,14 +64,21 @@
         </mat-menu>
 
         <mat-menu #splitMenu>
-          <button mat-menu-item (click)="activePhrase.mode = 'notepad'">Interactive split</button>
-          <button mat-menu-item disabled>Split by word</button>
-          <button mat-menu-item disabled>Split by line</button>
+          <button mat-menu-item (click)="activePhrase.mode = 'split'">Interactive split</button>
+          <button mat-menu-item (click)="splitPhraseByWord($index)">Split by word</button>
         </mat-menu>
         
         <mat-menu #mergeMenu>
-          <button mat-menu-item disabled>Left merge</button>
-          <button mat-menu-item disabled>Right merge</button>
+          @if($first) {
+            <button mat-menu-item disabled>Left merge</button>
+          } @else {
+            <button mat-menu-item (click)="mergePhraseLeft($index)">Left merge</button>
+          }
+          @if($last) {
+            <button mat-menu-item disabled>Right merge</button>
+          } @else {
+            <button mat-menu-item (click)="mergePhraseRight($index)">Right merge</button>
+          }
         </mat-menu>
 
       } 

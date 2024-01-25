@@ -2,7 +2,8 @@ import { Component, Inject, HostListener, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
-import { MatMenuModule } from '@angular/material/menu'; 
+import { MatMenuModule } from '@angular/material/menu';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { Page } from '../../model/page';
 import { Phrase } from '../../model/phrase';
 
@@ -23,7 +24,7 @@ export interface ActivePhrase {
 @Component({
   selector: 'app-page',
   standalone: true,
-  imports: [MatCardModule, MatIconModule, MatMenuModule],
+  imports: [MatCardModule, MatIconModule, MatMenuModule, MatToolbarModule],
   templateUrl: './page.component.html',
   styleUrl: './page.component.scss'
 })
@@ -68,6 +69,10 @@ export class PageComponent {
     if(confirm("Are you sure you would like to delete this phrase?")) this.page.lyrics.splice(index, 1);
   }
 
+  deleteAll(): void {
+    if(confirm("Are you sure you would like to DELETE ALL phrases from this page?")) this.page.lyrics = [];
+  }
+
   duplicatePhrase(index: number) {
     let duplicate = new Phrase(this.page.lyrics[index].content, this.page.lyrics[index].duration);
     this.page.lyrics.splice(index, 0, duplicate);
@@ -83,31 +88,84 @@ export class PageComponent {
   }
 
   saveAndCloseContentEditor(index: number): void {
-    this.page.lyrics[index].content = this.lyricInput.nativeElement.value;
+    const content = this.lyricInput.nativeElement.value;
+    
+    // process new lines as new phrases
+    let newPhrases: Phrase[] = [];
+    let tempStr = "";
+    let previousWasNewLine = false;
+    content.split("").forEach( (char: string, i: number) => {
+      if(char.match(/[\r\n]+/)) {
+        if(!previousWasNewLine) {
+          newPhrases.push(new Phrase(tempStr, 4));
+          tempStr = "";
+        } 
+        previousWasNewLine = true;
+      }
+      else {
+        tempStr += char;
+        previousWasNewLine = false;
+      }
+      if(i == content.length - 1) {
+        newPhrases.push(new Phrase(tempStr, 4));
+      }
+    });
+    let array2 = this.page.lyrics.splice(index);
+    array2.splice(0, 1);
+    this.page.lyrics = this.page.lyrics.concat(newPhrases, array2);
     this.activePhrase.mode = '';
   }
 
-  splitLyricsByWord() { // needs rework
-    const notWhitespace = new RegExp(/\S/);
-    let newLyrics: Phrase[] = [];
-    this.page.lyrics.forEach( (phrase) => {
-      let tempStr = "";
-      phrase.content.split("").forEach( (char, i) => {  
-        if(char.match(notWhitespace)) {
-          if(tempStr.slice(tempStr.length - 1).match(notWhitespace)) tempStr += char;
-          else {
-            if(tempStr.trim() !== '') newLyrics.push(new Phrase(tempStr, 0.5));
-            tempStr = char;
-          }
-        } else {
-          tempStr += char
+  mergePhraseLeft(index: number): void {
+    if(index !== 0) {
+      let content = this.page.lyrics[index - 1].content;
+      // add whitespace if none present
+      if(content.slice(content.length - 1).match(/\S/)) content += " ";
+      content += this.page.lyrics[index].content;
+      const duration = this.page.lyrics[index].duration + this.page.lyrics[index - 1].duration;
+      let merged = new Phrase(content, duration);
+      this.page.lyrics.splice(index - 1, 2, merged);
+    }
+  }
+
+  mergePhraseRight(index: number): void {
+    if(index !== this.page.lyrics.length - 1) {
+      let content = this.page.lyrics[index].content;
+      // add whitespace if none present
+      if(content.slice(content.length - 1).match(/\S/)) content += " ";
+      content += this.page.lyrics[index + 1].content;
+      const duration = this.page.lyrics[index + 1].duration + this.page.lyrics[index].duration;
+      let merged = new Phrase(content, duration);
+      this.page.lyrics.splice(index, 2, merged);
+    }
+  }
+
+  splitPhraseByWord(index: number): void {
+    let newPhrases: Phrase[] = [];
+    const content = this.page.lyrics[index].content.trim();
+    let tempStr = "";
+    content.split("").forEach( (char, i) => {
+      if(char.match(/\S/)) {
+        if(tempStr.slice(tempStr.length - 1).match(/\S/)) tempStr += char;
+        else {
+          if(tempStr.trim() !== "") newPhrases.push(new Phrase(tempStr, 0.5));
+          tempStr = char;
         }
-        if(i == phrase.content.length - 1) {
-          newLyrics.push(new Phrase(tempStr, 0.5));
-        }
-      });
+      } else {
+        tempStr += char;
+      }
+      if(i == content.length - 1) {
+        newPhrases.push(new Phrase(tempStr, 0.5));
+      }
     });
-    this.page.lyrics = newLyrics.slice(1);
+    let array2 = this.page.lyrics.splice(index);
+    array2.splice(0, 1);
+    this.page.lyrics = this.page.lyrics.concat(newPhrases, array2);
+  }
+
+  splitLyricsByWord() { 
+    const oldLyrics = structuredClone(this.page.lyrics);
+    oldLyrics.forEach((_, i) => this.splitPhraseByWord(i));
   }
 
   isNextBar(duration: number, first: boolean): boolean {
