@@ -165,7 +165,30 @@ export class PageComponent {
 
   splitLyricsByWord() { 
     const oldLyrics = structuredClone(this.page.lyrics);
-    oldLyrics.forEach((_, i) => this.splitPhraseByWord(i));
+    let newLyrics: Phrase[] = [];
+    oldLyrics.forEach((phrase) => {
+      let newPhrases: Phrase[] = [];
+      const content = phrase.content.trim();
+      let tempStr = "";
+      content.split("").forEach( (char, i) => {
+      if(char.match(/\S/)) {
+        if(tempStr.slice(tempStr.length - 1).match(/\S/)) tempStr += char;
+        else {
+          if(tempStr.trim() !== "") newPhrases.push(new Phrase(tempStr, 0.5));
+          tempStr = char;
+        }
+      } else {
+        tempStr += char;
+      }
+      if(i == content.length - 1) {
+        newPhrases.push(new Phrase(tempStr, 0.5));
+      }
+      });
+
+      newLyrics = newLyrics.concat(newPhrases);
+    });
+
+    this.page.lyrics = newLyrics;
   }
 
   isNextBar(duration: number, first: boolean): boolean {
