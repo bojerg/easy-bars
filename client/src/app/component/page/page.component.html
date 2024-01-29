@@ -1,13 +1,15 @@
 <div id="page-container">
-  <mat-toolbar id="page-toolbar" (click)="activePhrase.index = -1">
-    <input type="text" name="page-title" id="page-title" placeholder="{{placeholderTitle}}" (change)="saveTitle(title.value)" (click)="placeholderTitle = ''" (blur)="placeholderTitle = page.title" #title>
+  <mat-toolbar id="page-toolbar" (click)="selectedPhrase.index = -1">
+    <div></div>
     <div id="page-tools">
+      <input type="text" name="page-title" id="page-title" placeholder="{{placeholderTitle}}" (change)="saveTitle(title.value)" (click)="placeholderTitle = ''" (blur)="placeholderTitle = page.title" #title>
       <div id="undo-redo">
         <button disabled><mat-icon inline="true">undo</mat-icon></button>
         <button disabled><mat-icon inline="true">redo</mat-icon></button>
       </div>
       <button (click)="splitLyricsByWord()">Split by Word</button>
       <button (click)="deleteAll()">Delete All</button>
+      <button (click)="showLength = !showLength">{{ showLength ? "Hide length" : "Show length" }}</button>
     </div>
     <button id="page-close" mat-raised-button color="primary" (click)="dialogRef.close()"><mat-icon>close</mat-icon></button>
   </mat-toolbar> 
@@ -15,32 +17,37 @@
   <div id="lyric-cards-container">
   @for (phrase of page.lyrics; track $index) {
 
-    @if(activePhrase.mode === 'notepad' && activePhrase.index === $index && !$first) {
+    @if(selectedPhrase.mode === 'notepad' && selectedPhrase.index === $index && !$first) {
+      <!-- break phrases for notepad mode if not first -->
       <div class="break"></div>
     }
 
     <mat-card class="phrase-card" (click)="toggleActive($index)">
       
-      @if(activePhrase.index !== $index) {
+      @if(selectedPhrase.index !== $index) {
         <mat-card-title>{{ phrase.content }}</mat-card-title>
-        <mat-card-footer>Length: {{ phrase.getBeats() }}</mat-card-footer>
+        @if(showLength) { <mat-card-footer>Length: {{ phrase.getBeats() }}</mat-card-footer> }
       } 
-      @else {
-        @if(activePhrase.mode === 'content') {
+      @else { <!-- Selected phrase -->
+        @if(selectedPhrase.mode === 'content') {
           <input type="text" name="phrase-input" class="phrase-input" value="{{ phrase.content }}" (keydown.enter)="saveAndCloseContentEditor($index)" (blur)="saveAndCloseContentEditor($index)" #active>
         }
-        @else if (activePhrase.mode === 'notepad') {
+        @else if (selectedPhrase.mode === 'notepad') {
           <textarea name="phrase-textarea" class="phrase-textarea" cols="{{ screenWidth / 14 }}" rows="{{ screenHeight / 36 }}" value="{{ phrase.content }}" (blur)="saveAndCloseContentEditor($index)" #active></textarea>
         }
-        @else if (activePhrase.mode === 'time') {
+        @else if (selectedPhrase.mode === 'time') {
           <mat-card-footer>{{ phrase.content }}</mat-card-footer>
-          <input type="range" name="timeSlider" id="time-slider" value="{{phrase.duration}}" min="{{activePhrase.stepSize}}" max="{{activePhrase.stepSize * 128}}" step="{{activePhrase.stepSize}}" (change)="phrase.duration = timeSlider.valueAsNumber" list="steplist" #timeSlider>
+          <input type="range" name="timeSlider" id="time-slider" value="{{phrase.duration}}" min="{{selectedPhrase.stepSize}}" max="{{selectedPhrase.stepSize * 128}}" step="{{selectedPhrase.stepSize}}" (change)="phrase.duration = timeSlider.valueAsNumber" list="steplist" #timeSlider>
           <label for="time-slider" id="time-slider-label">
             <button (click)="timeNotchDown($index)"><mat-icon>keyboard_arrow_left</mat-icon></button>
             <b>{{phrase.getBeats()}}</b>
             <button (click)="timeNotchUp($index)"><mat-icon>keyboard_arrow_right</mat-icon></button>
           </label>
           <button (click)="timeCtrlToggleStep()">{{timeCtrlGetStepContext()}}</button>
+        }
+        @else if(selectedPhrase.mode === 'split') {
+          <input readonly="readonly" type="text" name="phrase-input" class="phrase-input" value="{{ phrase.content }}" (keydown.enter)="splitPhraseAtSpace($index, active.selectionStart)" (blur)="selectedPhrase.mode = ''" #active>
+          <mat-card-footer><b>Select</b> first character you want to split at and <b>press enter</b></mat-card-footer>
         }
         @else {
           <mat-card-content class="phrase-input">{{ phrase.content }}</mat-card-content>
@@ -49,22 +56,23 @@
         <mat-card-actions class="phrase-card-actions">
           <button mat-button (click)="toggleContentMode()"><mat-icon>create</mat-icon></button>
           <button mat-button (click)="toggleTimeMode()"><mat-icon>timer</mat-icon></button>
-          <button mat-button [matMenuTriggerFor]="phraseMenu" (click)="activePhrase.mode = 'menu'"><mat-icon>menu</mat-icon></button>
-          @if(activePhrase.mode === 'notepad' || activePhrase.mode === 'content') {
+          <button mat-button [matMenuTriggerFor]="phraseMenu" (click)="selectedPhrase.mode = 'menu'"><mat-icon>menu</mat-icon></button>
+          @if(selectedPhrase.mode === 'notepad' || selectedPhrase.mode === 'content') {
             <button mat-button (click)="saveAndCloseContentEditor($index)"><mat-icon>save</mat-icon></button>
           }
         </mat-card-actions>
 
         <mat-menu #phraseMenu>
-          <button mat-menu-item (click)="activePhrase.mode = 'notepad'">Notepad mode</button>
-          <button mat-menu-item [matMenuTriggerFor]="splitMenu" (click)="activePhrase.mode = 'menu'">Split</button>
-          <button mat-menu-item [matMenuTriggerFor]="mergeMenu" (click)="activePhrase.mode = 'menu'">Merge</button>
+          <button mat-menu-item (click)="selectedPhrase.mode = 'notepad'">Notepad mode</button>
+          <button mat-menu-item [matMenuTriggerFor]="splitMenu" (click)="selectedPhrase.mode = 'menu'">Split</button>
+          <button mat-menu-item [matMenuTriggerFor]="mergeMenu" (click)="selectedPhrase.mode = 'menu'">Merge</button>
+          <button mat-menu-item [matMenuTriggerFor]="insertMenu" (click)="selectedPhrase.mode = 'menu'">Insert</button>
           <button mat-menu-item (click)="duplicatePhrase($index)">Duplicate</button>
           <button mat-menu-item (click)="deletePhrase($index)">Delete</button>
         </mat-menu>
 
         <mat-menu #splitMenu>
-          <button mat-menu-item (click)="activePhrase.mode = 'split'">Interactive split</button>
+          <button mat-menu-item (click)="selectedPhrase.mode = 'split'">Interactive split</button>
           <button mat-menu-item (click)="splitPhraseByWord($index)">Split by word</button>
         </mat-menu>
         
@@ -81,11 +89,16 @@
           }
         </mat-menu>
 
+        <mat-menu #insertMenu>
+            <button mat-menu-item (click)="addNewPhraseLeft($index)">New phrase before</button>
+            <button mat-menu-item (click)="addNewPhraseRight($index)">New phrase after</button>
+        </mat-menu>
+
       } 
 
     </mat-card>
 
-    @if (isNextBar(phrase.duration, $first) || (activePhrase.mode === 'notepad' && activePhrase.index === $index)) { 
+    @if (isNextBar(phrase.duration, $first) || (selectedPhrase.mode === 'notepad' && selectedPhrase.index === $index)) { 
       <div class="break"></div>
     } 
   } 
@@ -93,7 +106,7 @@
     <div class="break"></div>
     <mat-card id="add-new-phrase-card">
       <mat-card-content>
-        <button id="add-new-phrase-btn" (click)="addPhrase(); activePhrase.index = page.lyrics.length - 1; activePhrase.mode = 'notepad'"><mat-icon inline="true">add</mat-icon></button>
+        <button id="add-new-phrase-btn" (click)="addPhrase(); selectedPhrase.index = page.lyrics.length - 1; selectedPhrase.mode = 'notepad'"><mat-icon inline="true">add</mat-icon></button>
       </mat-card-content>
     </mat-card>
 

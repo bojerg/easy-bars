@@ -9,13 +9,11 @@ import { Phrase } from '../../model/phrase';
 
 /** 
  * Simple interface to aid in controlling how to display the phrase currently being edited. 
- * @param index - index of the phrase in page.lyrics array
- * @param mode - flag for how to render phrase card
+ * @param index - index of the selected phrase in page.lyrics array
+ * @param mode - flag for how to render the selected phrase card
  * @param stepSize - duraton slider step size. Used as a multiple for min and max setting of #timeSlider
- * @remarks Mode types anticipated are 'content' (simple input editor), 'notepad' (textarea for longer input), and 'split' (split phrase into smaller chunks). 
- * This may be changed to numbers in the future.
 */
-export interface ActivePhrase {
+export interface SelectedPhrase {
   index: number,
   mode: string,
   stepSize: number
@@ -32,7 +30,7 @@ export class PageComponent {
 
   screenHeight: number = 0;
   screenWidth: number = 0;
-  activePhrase: ActivePhrase = {
+  selectedPhrase: SelectedPhrase = {
     index: 0,
     mode: '',
     stepSize: 0.0625
@@ -42,6 +40,7 @@ export class PageComponent {
   beat: number = 0;
   /** defined separately from the Page object's title for clear on click-- see component HTML at id page-title */
   placeholderTitle: string = "";
+  showLength = true;
 
   constructor(
     public dialog: MatDialog,
@@ -62,7 +61,7 @@ export class PageComponent {
   }
 
   addPhrase(): void {
-    this.page.lyrics.push(new Phrase('Test', 0.5));
+    this.page.lyrics.push(new Phrase('', 4));
   }
 
   deletePhrase(index: number) {
@@ -89,31 +88,35 @@ export class PageComponent {
 
   saveAndCloseContentEditor(index: number): void {
     const content = this.lyricInput.nativeElement.value;
-    
-    // process new lines as new phrases
-    let newPhrases: Phrase[] = [];
-    let tempStr = "";
-    let previousWasNewLine = false;
-    content.split("").forEach( (char: string, i: number) => {
-      if(char.match(/[\r\n]+/)) {
-        if(!previousWasNewLine) {
+    if(content.trim() == "") {
+      this.page.lyrics[index].content = content;
+    } else {
+      // process new lines as new phrases
+      let newPhrases: Phrase[] = [];
+      let tempStr = "";
+      let previousWasNewLine = false;
+      content.split("").forEach( (char: string, i: number) => {
+        if(char.match(/[\r\n]+/)) {
+          if(!previousWasNewLine) {
+            newPhrases.push(new Phrase(tempStr, 4));
+            tempStr = "";
+          } 
+          previousWasNewLine = true;
+        }
+        else {
+          tempStr += char;
+          previousWasNewLine = false;
+        }
+        if(i == content.length - 1) {
           newPhrases.push(new Phrase(tempStr, 4));
-          tempStr = "";
-        } 
-        previousWasNewLine = true;
-      }
-      else {
-        tempStr += char;
-        previousWasNewLine = false;
-      }
-      if(i == content.length - 1) {
-        newPhrases.push(new Phrase(tempStr, 4));
-      }
-    });
-    let array2 = this.page.lyrics.splice(index);
-    array2.splice(0, 1);
-    this.page.lyrics = this.page.lyrics.concat(newPhrases, array2);
-    this.activePhrase.mode = '';
+        }
+      });
+      let array2 = this.page.lyrics.splice(index);
+      array2.splice(0, 1);
+      this.page.lyrics = this.page.lyrics.concat(newPhrases, array2);
+    }
+    
+    this.selectedPhrase.mode = '';
   }
 
   mergePhraseLeft(index: number): void {
@@ -125,6 +128,7 @@ export class PageComponent {
       const duration = this.page.lyrics[index].duration + this.page.lyrics[index - 1].duration;
       let merged = new Phrase(content, duration);
       this.page.lyrics.splice(index - 1, 2, merged);
+      this.selectedPhrase.index--;
     }
   }
 
@@ -138,6 +142,22 @@ export class PageComponent {
       let merged = new Phrase(content, duration);
       this.page.lyrics.splice(index, 2, merged);
     }
+  }
+
+  addNewPhraseLeft(index: number): void {
+    let newPhrase = new Phrase("", 4);
+    if(index !== 0) {
+      this.page.lyrics.splice(index - 1, 0, newPhrase);
+      this.selectedPhrase.index = index - 1;
+    } else {
+      this.page.lyrics.unshift(newPhrase);
+    }
+  }
+
+  addNewPhraseRight(index: number): void {
+    let newPhrase = new Phrase("", 4);
+    this.page.lyrics.splice(index, 0, newPhrase);
+    this.selectedPhrase.index++;
   }
 
   splitPhraseByWord(index: number): void {
@@ -191,6 +211,16 @@ export class PageComponent {
     this.page.lyrics = newLyrics;
   }
 
+  splitPhraseAtSpace(index: number, position: number | null): void {
+    if(position !== null) {
+      const str = this.page.lyrics[index].content;
+      this.page.lyrics[index].content = str.substring(0, position);
+      this.page.lyrics.splice(index, 0, new Phrase(str.substring(position), 2));
+    } else {
+      alert("No split position selected. Highlight or click the text where you would like to split the phrase into two phrases.");
+    }
+  }
+
   isNextBar(duration: number, first: boolean): boolean {
     if(first) this.beat = 0;
     const previous = Math.floor(this.beat / 4);
@@ -199,42 +229,42 @@ export class PageComponent {
   }
 
   toggleActive(index: number): void {
-    if(this.activePhrase.mode === '' && this.activePhrase.index === index) this.activePhrase.index = -1;
-    else this.activePhrase.index = index;
+    if(this.selectedPhrase.mode === '' && this.selectedPhrase.index === index) this.selectedPhrase.index = -1;
+    else this.selectedPhrase.index = index;
   }
 
   toggleContentMode(): void {
-    if(this.activePhrase.mode === 'content') this.activePhrase.mode = '';
-    else this.activePhrase.mode = 'content';
+    if(this.selectedPhrase.mode === 'content') this.selectedPhrase.mode = '';
+    else this.selectedPhrase.mode = 'content';
   }
 
   toggleTimeMode(): void {
-    if(this.activePhrase.mode === 'time') this.activePhrase.mode = '';
+    if(this.selectedPhrase.mode === 'time') this.selectedPhrase.mode = '';
     else {
-      this.activePhrase.mode = 'time';
-      this.activePhrase.stepSize = 0.0625;
+      this.selectedPhrase.mode = 'time';
+      this.selectedPhrase.stepSize = 0.0625;
     } 
   }
 
   timeCtrlToggleStep(): void {
-    if(this.activePhrase.stepSize == 0.0625) this.activePhrase.stepSize *= 8;
-    else this.activePhrase.stepSize /= 8;
+    if(this.selectedPhrase.stepSize == 0.0625) this.selectedPhrase.stepSize *= 8;
+    else this.selectedPhrase.stepSize /= 8;
   }
 
   timeCtrlGetStepContext(): string {
-    if(this.activePhrase.stepSize == 0.0625) return "Big steps";
+    if(this.selectedPhrase.stepSize == 0.0625) return "Big steps";
     return "Small steps";
   }
 
   timeNotchUp(index: number): void {    
-    if(this.page.lyrics[index].duration < this.activePhrase.stepSize * 128) {
-      this.page.lyrics[index].duration += this.activePhrase.stepSize;
+    if(this.page.lyrics[index].duration < this.selectedPhrase.stepSize * 128) {
+      this.page.lyrics[index].duration += this.selectedPhrase.stepSize;
     }
   }
 
   timeNotchDown(index: number): void {
-    if(this.page.lyrics[index].duration > this.activePhrase.stepSize) {
-      this.page.lyrics[index].duration -= this.activePhrase.stepSize;
+    if(this.page.lyrics[index].duration > this.selectedPhrase.stepSize) {
+      this.page.lyrics[index].duration -= this.selectedPhrase.stepSize;
     }
   }
 
