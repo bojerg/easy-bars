@@ -36,6 +36,9 @@ export class PageComponent {
     stepSize: 0.0625
   }
 
+  undoStack: Phrase[][] = [];
+  redoStack: Phrase[][] = []; 
+
   /** Used organize rows of phrases by bar length */
   beat: number = 0;
   /** defined separately from the Page object's title for clear on click-- see component HTML at id page-title */
@@ -60,20 +63,51 @@ export class PageComponent {
    this.screenWidth = window.innerWidth;
   }
 
+  updateUndoStack(isRedo: boolean): void {
+    this.undoStack.unshift(structuredClone(this.page.lyrics));
+    if(this.undoStack.length == 16) this.undoStack.pop();
+    if(!isRedo) this.redoStack = [];
+  }
+
+  undo(): void {
+    if(this.undoStack.length !== 0) {
+      let newLyrics = this.undoStack.shift();
+      this.redoStack.unshift(structuredClone(this.page.lyrics));
+      // Undefined is impossible, yet the compiler insists on checking
+      this.page.lyrics = newLyrics === undefined ? [] : newLyrics;
+    }
+  }
+
+  redo(): void {
+    if(this.redoStack.length !== 0) {
+      this.updateUndoStack(true);
+      let newLyrics = this.redoStack.shift();
+      this.page.lyrics = newLyrics === undefined ? [] : newLyrics;
+    }
+  }
+
   addPhrase(): void {
+    // no undo stack update until save
     this.page.lyrics.push(new Phrase('', 4));
   }
 
   deletePhrase(index: number) {
-    if(confirm("Are you sure you would like to delete this phrase?")) this.page.lyrics.splice(index, 1);
+    if(confirm("Are you sure you would like to delete this phrase?")) {
+      this.updateUndoStack(false);
+      this.page.lyrics.splice(index, 1);
+    } 
   }
 
   deleteAll(): void {
-    if(confirm("Are you sure you would like to DELETE ALL phrases from this page?")) this.page.lyrics = [];
+    if(confirm("Are you sure you would like to DELETE ALL phrases from this page?")) {
+      this.updateUndoStack(false);
+      this.page.lyrics = [];
+    }
   }
 
   duplicatePhrase(index: number) {
-    let duplicate = new Phrase(this.page.lyrics[index].content, this.page.lyrics[index].duration);
+    this.updateUndoStack(false);
+    let duplicate = structuredClone(this.page.lyrics[index]);
     this.page.lyrics.splice(index, 0, duplicate);
   }
 
@@ -88,6 +122,7 @@ export class PageComponent {
 
   saveAndCloseContentEditor(index: number): void {
     const content = this.lyricInput.nativeElement.value;
+    this.updateUndoStack(false);
     if(content.trim() == "") {
       this.page.lyrics[index].content = content;
     } else {
@@ -121,6 +156,7 @@ export class PageComponent {
 
   mergePhraseLeft(index: number): void {
     if(index !== 0) {
+      this.updateUndoStack(false);
       let content = this.page.lyrics[index - 1].content;
       // add whitespace if none present
       if(content.slice(content.length - 1).match(/\S/)) content += " ";
@@ -133,6 +169,7 @@ export class PageComponent {
   }
 
   mergePhraseRight(index: number): void {
+    this.updateUndoStack(false);
     if(index !== this.page.lyrics.length - 1) {
       let content = this.page.lyrics[index].content;
       // add whitespace if none present
@@ -145,22 +182,19 @@ export class PageComponent {
   }
 
   addNewPhraseLeft(index: number): void {
-    let newPhrase = new Phrase("", 4);
-    if(index !== 0) {
-      this.page.lyrics.splice(index - 1, 0, newPhrase);
-      this.selectedPhrase.index = index - 1;
-    } else {
-      this.page.lyrics.unshift(newPhrase);
-    }
+    this.updateUndoStack(false);
+    this.page.lyrics.splice(index, 0, new Phrase("", 4));
   }
 
   addNewPhraseRight(index: number): void {
+    this.updateUndoStack(false);
     let newPhrase = new Phrase("", 4);
-    this.page.lyrics.splice(index, 0, newPhrase);
+    this.page.lyrics.splice(index + 1, 0, newPhrase);
     this.selectedPhrase.index++;
   }
 
   splitPhraseByWord(index: number): void {
+    this.updateUndoStack(false);
     let newPhrases: Phrase[] = [];
     const content = this.page.lyrics[index].content.trim();
     let tempStr = "";
@@ -184,6 +218,7 @@ export class PageComponent {
   }
 
   splitLyricsByWord() { 
+    this.updateUndoStack(false);
     const oldLyrics = structuredClone(this.page.lyrics);
     let newLyrics: Phrase[] = [];
     oldLyrics.forEach((phrase) => {
@@ -213,9 +248,11 @@ export class PageComponent {
 
   splitPhraseAtSpace(index: number, position: number | null): void {
     if(position !== null) {
+      this.updateUndoStack(false);
       const str = this.page.lyrics[index].content;
       this.page.lyrics[index].content = str.substring(0, position);
-      this.page.lyrics.splice(index, 0, new Phrase(str.substring(position), 2));
+      this.page.lyrics.splice(index + 1, 0, new Phrase(str.substring(position), 2));
+      this.selectedPhrase.mode = "";
     } else {
       alert("No split position selected. Highlight or click the text where you would like to split the phrase into two phrases.");
     }
@@ -258,14 +295,31 @@ export class PageComponent {
 
   timeNotchUp(index: number): void {    
     if(this.page.lyrics[index].duration < this.selectedPhrase.stepSize * 128) {
+      this.updateUndoStack(false);
       this.page.lyrics[index].duration += this.selectedPhrase.stepSize;
     }
   }
 
   timeNotchDown(index: number): void {
     if(this.page.lyrics[index].duration > this.selectedPhrase.stepSize) {
+      this.updateUndoStack(false);
       this.page.lyrics[index].duration -= this.selectedPhrase.stepSize;
     }
   }
+
+  public getBeats(index: number): string {
+    const duration = this.page.lyrics[index].duration;
+    const whole = Math.floor(duration);
+    const fraction = duration - whole;
+    const wholeStr = whole > 0 ? whole.toString() : "";
+    
+    // https://stackoverflow.com/questions/4652468/is-there-a-javascript-function-that-reduces-a-fraction
+    var gcd = function(a:number, b:number): number {
+        return b ? gcd(b, a%b) : a;
+    }
+    const fractionStr = fraction == 0 ? "" : ((fraction/0.0625)/gcd(16, fraction/0.0625)).toString() + "/" + (16/gcd(16, fraction/0.0625)).toString();
+
+    return (wholeStr + " " + fractionStr).trim();
+}
 
 }

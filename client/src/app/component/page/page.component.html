@@ -4,8 +4,16 @@
     <div id="page-tools">
       <input type="text" name="page-title" id="page-title" placeholder="{{placeholderTitle}}" (change)="saveTitle(title.value)" (click)="placeholderTitle = ''" (blur)="placeholderTitle = page.title" #title>
       <div id="undo-redo">
-        <button disabled><mat-icon inline="true">undo</mat-icon></button>
-        <button disabled><mat-icon inline="true">redo</mat-icon></button>
+        @if(undoStack.length > 0) {
+          <button (click)="undo()"><mat-icon inline="true">undo</mat-icon></button>
+        } @else {
+          <button disabled><mat-icon inline="true">undo</mat-icon></button>
+        }
+        @if(redoStack.length > 0) {
+          <button (click)="redo()"><mat-icon inline="true">redo</mat-icon></button>
+        } @else {
+          <button disabled><mat-icon inline="true">redo</mat-icon></button>
+        }
       </div>
       <button (click)="splitLyricsByWord()">Split by Word</button>
       <button (click)="deleteAll()">Delete All</button>
@@ -26,7 +34,7 @@
       
       @if(selectedPhrase.index !== $index) {
         <mat-card-title>{{ phrase.content }}</mat-card-title>
-        @if(showLength) { <mat-card-footer>Length: {{ phrase.getBeats() }}</mat-card-footer> }
+        @if(showLength) { <mat-card-footer>Length: {{ getBeats($index) }}</mat-card-footer> }
       } 
       @else { <!-- Selected phrase -->
         @if(selectedPhrase.mode === 'content') {
@@ -37,10 +45,10 @@
         }
         @else if (selectedPhrase.mode === 'time') {
           <mat-card-footer>{{ phrase.content }}</mat-card-footer>
-          <input type="range" name="timeSlider" id="time-slider" value="{{phrase.duration}}" min="{{selectedPhrase.stepSize}}" max="{{selectedPhrase.stepSize * 128}}" step="{{selectedPhrase.stepSize}}" (change)="phrase.duration = timeSlider.valueAsNumber" list="steplist" #timeSlider>
+          <input type="range" name="timeSlider" id="time-slider" value="{{phrase.duration}}" min="{{selectedPhrase.stepSize}}" max="{{selectedPhrase.stepSize * 128}}" step="{{selectedPhrase.stepSize}}" (change)="this.updateUndoStack(false); phrase.duration = timeSlider.valueAsNumber" list="steplist" #timeSlider>
           <label for="time-slider" id="time-slider-label">
             <button (click)="timeNotchDown($index)"><mat-icon>keyboard_arrow_left</mat-icon></button>
-            <b>{{phrase.getBeats()}}</b>
+            <b>{{ getBeats($index) }}</b>
             <button (click)="timeNotchUp($index)"><mat-icon>keyboard_arrow_right</mat-icon></button>
           </label>
           <button (click)="timeCtrlToggleStep()">{{timeCtrlGetStepContext()}}</button>
