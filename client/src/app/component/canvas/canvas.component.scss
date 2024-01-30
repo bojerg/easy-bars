@@ -7,8 +7,8 @@
 
 .track-label-container {
     padding: 2rem 1rem;
-    min-width: 5rem;
-    max-width: 5rem;
+    min-width: 80px;
+    max-width: 80px;
     background-color: rgba(104, 84, 79, 0.575);
 }
 
@@ -18,14 +18,17 @@
     max-width: 42px;
     background-color: rgba(94, 80, 77, 0.5);
     border-left: 2px solid gray;
+
 }
 
-.beat:nth-child(even) {
+.beat:nth-child(odd) {
     background-color: rgb(69, 63, 71, 0.5);
 }
 
 #first-beat {
     border-left: 3px solid gainsboro;
+    min-width: 41px;
+    max-width: 41px;
 }
 
 #add-track {
@@ -59,4 +62,37 @@
 
 #instrumental-track {
     margin-top: 4px;
+}
+
+.float-page-container {
+    display: float;
+    position: absolute;
+    left: 7rem;
+}
+
+.float-page-card {
+    border-radius: 4px;
+    margin: 0.5em 0;
+    height: 7em;
+}
+
+.float-page-header {
+    border-radius: 4px 4px 0 0;
+    background-color: rgba(255, 255, 255, 0.27);
+    height: 1em;
+    margin-bottom: 0.5em;
+}
+
+.float-page-actions {
+    display: flex;
+    justify-content: center;
+}
+
+.float-page-edit-btn > mat-icon {
+    font-size: 1rem;
+}
+
+.track-boundary {
+    display: flex;
+    flex-wrap: nowrap;
 }

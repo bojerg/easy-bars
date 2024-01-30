@@ -6,6 +6,7 @@
                 Beat Label
             </span>
         </div>
+        <div><!-- fake flex item for balance --></div>
         @for (bar of bars; track $index) {
             <div class="beat" id="first-beat"></div>
             <div class="beat"></div>
@@ -15,18 +16,27 @@
     </div>
 
     @for(page of canvas.tracks; track page.id) {
-        <div class="track" (click)="openPage(page)">
-            <div class="track-label-container">
-                <span class="track-label">
-                    {{ page.title }}
-                </span>
+        <div class="track">
+            <div class="track-label-container" (click)="openPage(page)">
+                <span class="track-label">{{ page.title }}</span>
             </div>
-            @for (bar of bars; track $index) {
-                <div class="beat" id="first-beat"></div>
-                <div class="beat"></div>
-                <div class="beat"></div>
-                <div class="beat"></div>
-            } 
+            <div class="track-boundary">
+                @for (bar of bars; track $index) {
+                    <div class="beat" id="first-beat"></div>
+                    <div class="beat"></div>
+                    <div class="beat"></div>
+                    <div class="beat"></div>
+                }
+                <div class="float-page-container" cdkDragBoundary=".track-boundary" cdkDrag (cdkDragStarted)="dragStarted($event, $index)" [cdkDragConstrainPosition]="computeDragRenderPos.bind(this)">
+                    <mat-card class="float-page-card" [ngStyle]="{'width.px': getCardWidth($index) }">
+                        <span class="float-page-header"></span>
+                        <mat-card-content style="text-align: center;">{{ page.getPreview() }}</mat-card-content>
+                        <mat-card-actions class="float-page-actions">
+                            <button class="float-page-edit-btn" (click)="openPage(page)"><mat-icon inline="true" >create</mat-icon></button>
+                        </mat-card-actions>
+                    </mat-card>
+                </div>
+            </div>
         </div>
     }
 
