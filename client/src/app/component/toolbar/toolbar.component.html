@@ -1,12 +1,12 @@
 <mat-toolbar id="toolbar">
     <div id="playback-menu">
     @if(!play) {
-        <button type="button" id="play-pause-btn" (click)="this.playFn()">▶️</button>
-        <button type="button" id="stop-btn" (click)="this.stopFn()">⏹️</button>
+        <button mat-mini-fab id="play-pause-btn" (click)="this.playFn()"><mat-icon class="playback-btn">play_arrow</mat-icon></button>
+        <button mat-mini-fab id="stop-btn" (click)="this.stopFn()"><mat-icon class="playback-btn">stop</mat-icon></button>
     }
     @else {
-        <button type="button" id="play-pause-btn" (click)="this.pauseFn()">⏸️</button>
-        <button type="button" id="stop-btn" (click)="this.stopFn()">⏹️</button>
+        <button mat-mini-fab id="play-pause-btn" (click)="this.pauseFn()"><mat-icon class="playback-btn">pause</mat-icon></button>
+        <button mat-mini-fab id="stop-btn" (click)="this.stopFn()"><mat-icon class="playback-btn">stop</mat-icon></button>
     }   
     </div>
     <div id="bpm-menu">
@@ -18,7 +18,16 @@
         <input type="checkbox" name="metronome" id="metronome">
     </div>
     <div id="mp3-info">
-        <!-- https://blog.angular-university.io/angular-file-upload/ -->
+        <input type="file" class="file-input" (change)="onFileSelected($event)" accept="audio/mpeg3" #fileUpload>
+        <div class="file-upload">
+            <span>MP3: {{fileName || "No file uploaded yet."}}</span>
+            <button mat-mini-fab color="primary" class="upload-btn" (click)="fileUpload.click()"><mat-icon>attach_file</mat-icon></button>
+        </div>
+        <div class="progress">
+            <mat-progress-bar class="progress-bar" mode="determinate" [value]="uploadProgress" *ngIf="uploadProgress"></mat-progress-bar>
+            <mat-icon class="cancel-upload" (click)="cancelUpload()" *ngIf="uploadProgress">delete_forever</mat-icon>
+        </div>
+        <mat-icon class="cancel-upload" (click)="cancelUpload()" *ngIf="uploadProgress">delete_forever</mat-icon>
     </div>
 </mat-toolbar>
 <app-canvas [bpm]="bpm" [play]="play"></app-canvas>
