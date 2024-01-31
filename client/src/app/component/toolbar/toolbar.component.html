@@ -18,7 +18,7 @@
         <input type="checkbox" name="metronome" id="metronome">
     </div>
     <div id="mp3-info">
-        <input type="file" class="file-input" (change)="onFileSelected($event)" accept="audio/mpeg3" #fileUpload>
+        <input type="file" class="file-input" (change)="onFileSelected($event)" accept=".mp3" #fileUpload>
         <div class="file-upload">
             <span>MP3: {{fileName || "No file uploaded yet."}}</span>
             <button mat-mini-fab color="primary" class="upload-btn" (click)="fileUpload.click()"><mat-icon>attach_file</mat-icon></button>

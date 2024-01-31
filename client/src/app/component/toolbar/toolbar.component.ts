@@ -61,9 +61,10 @@ export class ToolbarComponent {
   }
 
   onFileSelected(event: any) {
-    const file:File = event.target.files[0];
+    const file: File = event.target.files[0];
     if (file) {
       this.fileName = file.name;
+      const source = URL.createObjectURL(file);
       const formData = new FormData();
       formData.append("thumbnail", file);
 
@@ -84,7 +85,7 @@ export class ToolbarComponent {
       })
       */
 
-      this.sound = new Howl({ src: file.webkitRelativePath});
+      this.sound = new Howl({ src: [source], format: ['mp3']});
     }
   }
 
