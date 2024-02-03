@@ -17,7 +17,7 @@ bootstrapApplication(AppComponent, {
     provideAnimations(),
     importProvidersFrom(
       AuthModule.forRoot({
-        ...env.auth0
+        ...env.auth0,
     })
     )
   ]

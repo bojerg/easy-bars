@@ -27,9 +27,8 @@ export interface Ping {
 })
 export class AppComponent {
   
-  title = 'Easy Bars';
-  authSub!: Subscription;
   user: any;
+  isAuthenticated: boolean = false;
   /*
   insertId: string = "";
   pong: Ping | undefined;
@@ -39,8 +38,10 @@ export class AppComponent {
     this.user = {};
   }
   
-  ngOnInit(): void { this.authSub = this.auth.user$.subscribe((success: any) => this.user = success); }
-  ngOnDestroy(): void { this.authSub.unsubscribe(); }
+  ngOnInit(): void { 
+    this.auth.user$.subscribe((success: any) => this.user = success);
+    this.auth.isAuthenticated$.subscribe((success: boolean) => this.isAuthenticated = success);
+  }
 
   doUserLoginAction(login: boolean): void { 
     if(login) {

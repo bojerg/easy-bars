@@ -5,6 +5,6 @@
 
 <router-outlet></router-outlet>
 -->
-<app-header [title]="title" [user]="user" (loginLogout)="doUserLoginAction($event)"></app-header>
+<app-header [isAuthenticated]="isAuthenticated" (loginLogout)="doUserLoginAction($event)"></app-header>
 <app-toolbar></app-toolbar>
 

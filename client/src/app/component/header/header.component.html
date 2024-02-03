@@ -1,12 +1,17 @@
-<h1>{{ title }}</h1>
-@if(user.isAuthenicated) {
-    <button [matMenuTriggerFor]="userMenu"><mat-icon>menu</mat-icon></button>
-    <mat-menu #userMenu>
-        <button mat-menu-item (click)="logout()">Logout</button>
-        <button mat-menu-item disabled>Profile</button>
-        <button mat-menu-item disabled>New</button>
-        <button mat-menu-item disabled>Load</button>
-    </mat-menu>
-} @else {
-    <button (click)="login()">Login</button>
-}
+<header>
+    <div></div>
+    <h1>Easy Bars</h1>
+    <div class="user-options">
+        @if(isAuthenticated) {
+            <button [matMenuTriggerFor]="userMenu" id="user-menu"><mat-icon inline="true">menu</mat-icon></button>
+            <mat-menu #userMenu>
+                <button mat-menu-item (click)="logout()">Logout</button>
+                <button mat-menu-item disabled>Profile</button>
+                <button mat-menu-item disabled>New</button>
+                <button mat-menu-item disabled>Load</button>
+            </mat-menu>
+        } @else {
+            <button (click)="login()" id="login"><span>Login </span><mat-icon>person</mat-icon></button>
+        }
+    </div>
+</header>

@@ -10,8 +10,7 @@ import { MatMenuModule } from '@angular/material/menu';
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
-  @Input() title: string = ""; // TODO: remove pointless @Input example
-  @Input() user: any;
+  @Input() isAuthenticated: boolean = false;
   @Output() loginLogout = new EventEmitter<boolean>();
 
   login(): void { this.loginLogout.next(true); }

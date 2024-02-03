@@ -9,3 +9,45 @@ h1 {
     padding: 1rem 0;
     margin: 0;
 }
+
+header {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    padding: 0 2rem;
+}
+
+.user-options {
+    display: flex;
+    width: 6rem;
+    margin: 0.5rem 0;
+    justify-content: right;
+}
+
+#user-menu {
+    background-color: inherit;
+    border: none;
+    color: #AA1851;
+}
+
+#user-menu > mat-icon {
+    font-size: 2rem;
+}
+
+#login {
+    width: 6rem;
+    font-size: large;
+    background-color: #AA1851;
+    border-radius: 4px;
+    border:  #AA1851;
+    color: whitesmoke;
+}
+
+#login > span {
+    line-height: 1rem;
+}
+
+#login > mat-icon {
+    vertical-align: middle !important;
+    line-height: 1rem;
+}
