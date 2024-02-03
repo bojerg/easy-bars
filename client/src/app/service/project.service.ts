@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Canvas } from '../model/canvas';
 import { BehaviorSubject } from 'rxjs';
-import { Page } from '../model/page';
 
 @Injectable({
   providedIn: 'root'

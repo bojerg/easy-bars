@@ -4,6 +4,10 @@ import { RouterOutlet } from '@angular/router';
 import { ToolbarComponent } from "./component/toolbar/toolbar.component";
 import { CanvasComponent } from "./component/canvas/canvas.component";
 import { HeaderComponent } from "./component/header/header.component";
+import { AuthModule, AuthService } from '@auth0/auth0-angular';
+import { Subscription } from 'rxjs';
+
+
 /*
 import { HttpClient } from "@angular/common/http";
 
@@ -24,12 +28,27 @@ export interface Ping {
 export class AppComponent {
   
   title = 'Easy Bars';
+  authSub!: Subscription;
+  user: any;
   /*
   insertId: string = "";
   pong: Ping | undefined;
   */
 
-  constructor() {}
+  constructor(private auth: AuthService) {
+    this.user = {};
+  }
+  
+  ngOnInit(): void { this.authSub = this.auth.user$.subscribe((success: any) => this.user = success); }
+  ngOnDestroy(): void { this.authSub.unsubscribe(); }
+
+  doUserLoginAction(login: boolean): void { 
+    if(login) {
+      this.auth.loginWithRedirect();
+    } else {
+      this.auth.logout();
+    }
+  }
 
   /*
   ngOnInit() {

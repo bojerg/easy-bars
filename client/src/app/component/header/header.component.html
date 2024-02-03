@@ -1,1 +1,12 @@
 <h1>{{ title }}</h1>
+@if(user.isAuthenicated) {
+    <button [matMenuTriggerFor]="userMenu"><mat-icon>menu</mat-icon></button>
+    <mat-menu #userMenu>
+        <button mat-menu-item (click)="logout()">Logout</button>
+        <button mat-menu-item disabled>Profile</button>
+        <button mat-menu-item disabled>New</button>
+        <button mat-menu-item disabled>Load</button>
+    </mat-menu>
+} @else {
+    <button (click)="login()">Login</button>
+}
