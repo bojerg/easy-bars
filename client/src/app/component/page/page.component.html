@@ -32,12 +32,20 @@
 
     <mat-card class="phrase-card" (click)="toggleActive($index)">
       
-      @if(selectedPhrase.index !== $index) {
+      @if(selectedPhrase.index !== $index && phrase.isPause ) {
+        @if(showLength) { <mat-card-title>Length: {{ getBeats($index) }}</mat-card-title> }
+        <mat-card-footer><mat-icon>timelapse</mat-icon></mat-card-footer> 
+      }
+      @else if (selectedPhrase.index !== $index) {
         <mat-card-title>{{ phrase.content }}</mat-card-title>
         @if(showLength) { <mat-card-footer>Length: {{ getBeats($index) }}</mat-card-footer> }
-      } 
+      }
       @else { <!-- Selected phrase -->
-        @if(selectedPhrase.mode === 'content') {
+        @if (phrase.isPause) {
+          <mat-card-title>Length: {{ getBeats($index) }}</mat-card-title>
+          <mat-card-footer>Pause</mat-card-footer>
+        }
+        @else if(selectedPhrase.mode === 'content') {
           <input type="text" name="phrase-input" class="phrase-input" value="{{ phrase.content }}" (keydown.enter)="saveAndCloseContentEditor($index)" (blur)="saveAndCloseContentEditor($index)" #active>
         }
         @else if (selectedPhrase.mode === 'notepad') {
@@ -62,11 +70,17 @@
         }
 
         <mat-card-actions class="phrase-card-actions">
-          <button mat-button (click)="toggleContentMode()"><mat-icon>create</mat-icon></button>
-          <button mat-button (click)="toggleTimeMode()"><mat-icon>timer</mat-icon></button>
-          <button mat-button [matMenuTriggerFor]="phraseMenu" (click)="selectedPhrase.mode = 'menu'"><mat-icon>menu</mat-icon></button>
-          @if(selectedPhrase.mode === 'notepad' || selectedPhrase.mode === 'content') {
-            <button mat-button (click)="saveAndCloseContentEditor($index)"><mat-icon>save</mat-icon></button>
+          @if(phrase.isPause) {
+            <button mat-button (click)="toggleTimeMode()"><mat-icon>timer</mat-icon></button>
+            <button mat-button [matMenuTriggerFor]="pauseMenu" (click)="selectedPhrase.mode = 'menu'"><mat-icon>menu</mat-icon></button>
+          }
+          @else {
+            <button mat-button (click)="toggleContentMode()"><mat-icon>create</mat-icon></button>
+            <button mat-button (click)="toggleTimeMode()"><mat-icon>timer</mat-icon></button>
+            <button mat-button [matMenuTriggerFor]="phraseMenu" (click)="selectedPhrase.mode = 'menu'"><mat-icon>menu</mat-icon></button>
+            @if(selectedPhrase.mode === 'notepad' || selectedPhrase.mode === 'content') {
+              <button mat-button (click)="saveAndCloseContentEditor($index)"><mat-icon>save</mat-icon></button>
+            }
           }
         </mat-card-actions>
 
@@ -74,6 +88,7 @@
           <button mat-menu-item (click)="selectedPhrase.mode = 'notepad'">Notepad mode</button>
           <button mat-menu-item [matMenuTriggerFor]="splitMenu" (click)="selectedPhrase.mode = 'menu'">Split</button>
           <button mat-menu-item [matMenuTriggerFor]="mergeMenu" (click)="selectedPhrase.mode = 'menu'">Merge</button>
+          <button mat-menu-item [matMenuTriggerFor]="moveMenu" (click)="selectedPhrase.mode = 'menu'">Move</button>
           <button mat-menu-item [matMenuTriggerFor]="insertMenu" (click)="selectedPhrase.mode = 'menu'">Insert</button>
           <button mat-menu-item (click)="duplicatePhrase($index)">Duplicate</button>
           <button mat-menu-item (click)="deletePhrase($index)">Delete</button>
@@ -97,9 +112,30 @@
           }
         </mat-menu>
 
+        <mat-menu #moveMenu>
+          @if($first) {
+            <button mat-menu-item disabled>Move left</button>
+          } @else {
+            <button mat-menu-item (click)="moveLeft($index)">Move left</button>
+          }
+          @if($last) {
+            <button mat-menu-item disabled>Move right</button>
+          } @else {
+            <button mat-menu-item (click)="moveRight($index)">Move right</button>
+          }
+        </mat-menu>
+
         <mat-menu #insertMenu>
             <button mat-menu-item (click)="addNewPhraseLeft($index)">New phrase before</button>
             <button mat-menu-item (click)="addNewPhraseRight($index)">New phrase after</button>
+            <button mat-menu-item (click)="addPauseLeft($index)">Pause before</button>
+            <button mat-menu-item (click)="addPauseRight($index)">Pause after</button>
+        </mat-menu>
+
+        <mat-menu #pauseMenu>
+          <button mat-menu-item [matMenuTriggerFor]="insertMenu" (click)="selectedPhrase.mode = 'menu'">Insert</button>
+          <button mat-menu-item (click)="duplicatePhrase($index)">Duplicate</button>
+          <button mat-menu-item (click)="deletePhrase($index)">Delete</button>
         </mat-menu>
 
       } 

@@ -88,7 +88,7 @@ export class PageComponent {
 
   addPhrase(): void {
     // no undo stack update until save
-    this.page.lyrics.push(new Phrase('', 4));
+    this.page.lyrics.push(new Phrase('', 4, false));
   }
 
   deletePhrase(index: number) {
@@ -133,7 +133,7 @@ export class PageComponent {
       content.split("").forEach( (char: string, i: number) => {
         if(char.match(/[\r\n]+/)) {
           if(!previousWasNewLine) {
-            newPhrases.push(new Phrase(tempStr, 4));
+            newPhrases.push(new Phrase(tempStr, 4, false));
             tempStr = "";
           } 
           previousWasNewLine = true;
@@ -143,7 +143,7 @@ export class PageComponent {
           previousWasNewLine = false;
         }
         if(i == content.length - 1) {
-          newPhrases.push(new Phrase(tempStr, 4));
+          newPhrases.push(new Phrase(tempStr, 4, false));
         }
       });
       let array2 = this.page.lyrics.splice(index);
@@ -162,7 +162,7 @@ export class PageComponent {
       if(content.slice(content.length - 1).match(/\S/)) content += " ";
       content += this.page.lyrics[index].content;
       const duration = this.page.lyrics[index].duration + this.page.lyrics[index - 1].duration;
-      let merged = new Phrase(content, duration);
+      let merged = new Phrase(content, duration, false);
       this.page.lyrics.splice(index - 1, 2, merged);
       this.selectedPhrase.index--;
     }
@@ -176,21 +176,51 @@ export class PageComponent {
       if(content.slice(content.length - 1).match(/\S/)) content += " ";
       content += this.page.lyrics[index + 1].content;
       const duration = this.page.lyrics[index + 1].duration + this.page.lyrics[index].duration;
-      let merged = new Phrase(content, duration);
+      let merged = new Phrase(content, duration, false);
       this.page.lyrics.splice(index, 2, merged);
     }
   }
 
   addNewPhraseLeft(index: number): void {
     this.updateUndoStack(false);
-    this.page.lyrics.splice(index, 0, new Phrase("", 4));
+    this.page.lyrics.splice(index, 0, new Phrase("", 4, false));
   }
 
   addNewPhraseRight(index: number): void {
     this.updateUndoStack(false);
-    let newPhrase = new Phrase("", 4);
+    let newPhrase = new Phrase("", 4, false);
     this.page.lyrics.splice(index + 1, 0, newPhrase);
     this.selectedPhrase.index++;
+  }
+
+  addPauseLeft(index: number): void {
+    this.updateUndoStack(false);
+    this.page.lyrics.splice(index, 0, new Phrase("", 1, true));
+  }
+
+  addPauseRight(index: number): void {
+    this.updateUndoStack(false);
+    let newPhrase = new Phrase("", 1, true);
+    this.page.lyrics.splice(index + 1, 0, newPhrase);
+    this.selectedPhrase.index++;
+  }
+
+  moveLeft(index: number): void {
+    if(index !== 0) {
+      this.updateUndoStack(false);
+      let phrase = structuredClone(this.page.lyrics[index]);
+      this.page.lyrics.splice(index, 1);
+      this.page.lyrics.splice(index - 1, 0, phrase);
+    }
+  }
+
+  moveRight(index: number): void {
+    if(index !== this.page.lyrics.length - 1) {
+      this.updateUndoStack(false);
+      let phrase = structuredClone(this.page.lyrics[index]);
+      this.page.lyrics.splice(index, 1);
+      this.page.lyrics.splice(index + 1, 0, phrase);
+    }
   }
 
   splitPhraseByWord(index: number): void {
@@ -202,14 +232,14 @@ export class PageComponent {
       if(char.match(/\S/)) {
         if(tempStr.slice(tempStr.length - 1).match(/\S/)) tempStr += char;
         else {
-          if(tempStr.trim() !== "") newPhrases.push(new Phrase(tempStr, 0.5));
+          if(tempStr.trim() !== "") newPhrases.push(new Phrase(tempStr, 0.5, false));
           tempStr = char;
         }
       } else {
         tempStr += char;
       }
       if(i == content.length - 1) {
-        newPhrases.push(new Phrase(tempStr, 0.5));
+        newPhrases.push(new Phrase(tempStr, 0.5, false));
       }
     });
     let array2 = this.page.lyrics.splice(index);
@@ -222,25 +252,29 @@ export class PageComponent {
     const oldLyrics = structuredClone(this.page.lyrics);
     let newLyrics: Phrase[] = [];
     oldLyrics.forEach((phrase) => {
-      let newPhrases: Phrase[] = [];
-      const content = phrase.content.trim();
-      let tempStr = "";
-      content.split("").forEach( (char, i) => {
-      if(char.match(/\S/)) {
-        if(tempStr.slice(tempStr.length - 1).match(/\S/)) tempStr += char;
-        else {
-          if(tempStr.trim() !== "") newPhrases.push(new Phrase(tempStr, 0.5));
-          tempStr = char;
-        }
+      if(phrase.isPause) {
+        newLyrics.push(phrase);
       } else {
-        tempStr += char;
-      }
-      if(i == content.length - 1) {
-        newPhrases.push(new Phrase(tempStr, 0.5));
-      }
-      });
+        let newPhrases: Phrase[] = [];
+        const content = phrase.content.trim();
+        let tempStr = "";
+        content.split("").forEach( (char, i) => {
+        if(char.match(/\S/)) {
+          if(tempStr.slice(tempStr.length - 1).match(/\S/)) tempStr += char;
+          else {
+            if(tempStr.trim() !== "") newPhrases.push(new Phrase(tempStr, 0.5, false));
+            tempStr = char;
+          }
+        } else {
+          tempStr += char;
+        }
+        if(i == content.length - 1) {
+          newPhrases.push(new Phrase(tempStr, 0.5, false));
+        }
+        });
 
-      newLyrics = newLyrics.concat(newPhrases);
+        newLyrics = newLyrics.concat(newPhrases);
+      }
     });
 
     this.page.lyrics = newLyrics;
@@ -251,7 +285,7 @@ export class PageComponent {
       this.updateUndoStack(false);
       const str = this.page.lyrics[index].content;
       this.page.lyrics[index].content = str.substring(0, position);
-      this.page.lyrics.splice(index + 1, 0, new Phrase(str.substring(position), 2));
+      this.page.lyrics.splice(index + 1, 0, new Phrase(str.substring(position), 2, false));
       this.selectedPhrase.mode = "";
     } else {
       alert("No split position selected. Highlight or click the text where you would like to split the phrase into two phrases.");
