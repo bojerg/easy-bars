@@ -6,6 +6,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Page } from '../../model/page';
 import { Phrase } from '../../model/phrase';
+import { sampleLyrics } from '../../model/testBars';
 
 /** 
  * Simple interface to aid in controlling how to display the phrase currently being edited. 
@@ -88,7 +89,7 @@ export class PageComponent {
 
   addPhrase(): void {
     // no undo stack update until save
-    this.page.lyrics.push(new Phrase('', 4, false));
+    this.page.lyrics.push(new Phrase(sampleLyrics, 4, false));
   }
 
   deletePhrase(index: number) {
