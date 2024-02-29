@@ -25,7 +25,6 @@ export class CanvasComponent {
   @Input() pause: boolean = false;
 
   bars: number[] = [];
-  barsPerRow: any;
   
   canvasSub: Subscription = new Subscription;
   canvas!: Canvas;
@@ -36,28 +35,30 @@ export class CanvasComponent {
   constructor(private dialog: MatDialog, private projectService: ProjectService) {}
 
   ngOnInit() {
-    this.projectService.canvas.subscribe(canvas => this.canvas = canvas);
-    this.calculateBarsPerRow();
-
-
-
-    // temporary number in lieu of object oriented approach
-    for(let i = 1; i <= 17; i++) {
-      this.bars.push(i);
-    }
+    this.projectService.canvas.subscribe(canvas => {
+      this.canvas = canvas;
+      this.calculateCanvasBars();
+    });
   }
 
   ngOnDestroy() {
     this.canvasSub.unsubscribe();
   }
-  
-  @HostListener('window:resize', ['$event'])
-  onWindowResize() {
-    this.calculateBarsPerRow();
-  }
 
-  calculateBarsPerRow() {
-    this.barsPerRow = Math.floor(window.innerWidth / 400);
+  calculateCanvasBars(): void {
+
+    let bars = 28;
+
+    this.canvas.tracks.forEach(page => {
+      const fullDur = page.getFullDuration() + page.start;
+      bars = fullDur > bars ? fullDur : bars;
+    });
+
+    this.bars = [];
+    for(let i = 1; i <= bars; i++) {
+      this.bars.push(i);
+    }
+    alert("calculated canvas! " + this.bars.length);
   }
 
   newPage(): void { 
@@ -72,7 +73,8 @@ export class CanvasComponent {
       height: '91vh'
     }
 
-    this.dialog.open(PageComponent, config);
+    let dialogRef = this.dialog.open(PageComponent, config);
+    dialogRef.afterClosed().subscribe( _ => this.calculateCanvasBars());
   }
 
   getCardWidth(index: number): number {
@@ -86,10 +88,10 @@ export class CanvasComponent {
       this.dragIndex = index;
   }
   computeDragRenderPos(pos: any, _: any): {x: number, y: number} {
-      // will render the element every 22 pixels horizontally
+      // will render the element every 16 pixels horizontally
       const delta = pos.x - this.dragStart.x;
-      let xPos = this.dragStart.x + Math.floor(delta / 22) * 22;
-      this.canvas.tracks[this.dragIndex].start = (xPos - 112) / 44;
+      let xPos = this.dragStart.x + Math.floor(delta / 16) * 16;
+      this.canvas.tracks[this.dragIndex].start = (xPos - 112) / 16;
       return {x: xPos, y: this.dragStart.y};
   }
 }

@@ -1,3 +1,8 @@
+.canvas {
+    height: calc(100% - 4rem);
+    overflow-x: scroll;
+}
+
 .track {
     height: 8em;
     display: flex;
@@ -14,10 +19,10 @@
 
 .beat {
     height: 100%;
-    min-width: 42px;
-    max-width: 42px;
+    min-width: 15px;
+    max-width: 15px;
     background-color: rgba(94, 80, 77, 0.5);
-    border-left: 2px solid gray;
+    border-left: 1px solid gray;
 
 }
 
@@ -26,9 +31,9 @@
 }
 
 #first-beat {
-    border-left: 3px solid gainsboro;
-    min-width: 41px;
-    max-width: 41px;
+    border-left: 2px solid black;
+    min-width: 14px;
+    max-width: 14px;
 }
 
 #add-track {
