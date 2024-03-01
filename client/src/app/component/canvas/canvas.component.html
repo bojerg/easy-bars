@@ -6,12 +6,11 @@
                 Beat Label
             </span>
         </div>
-        <div><!-- fake flex item for balance --></div>
         @for (bar of bars; track $index) {
-            <div class="beat" id="first-beat"></div>
-            <div class="beat"></div>
-            <div class="beat"></div>
-            <div class="beat"></div>
+            <div class="beat mp3-beats" id="first-beat"></div>
+            <div class="beat mp3-beats"></div>
+            <div class="beat mp3-beats"></div>
+            <div class="beat mp3-beats"></div>
         }
     </div>
 
@@ -21,14 +20,8 @@
                 <span class="track-label">{{ page.title }}</span>
             </div>
             <div class="track-boundary">
-                @for (bar of bars; track $index) {
-                    <div class="beat" id="first-beat"></div>
-                    <div class="beat"></div>
-                    <div class="beat"></div>
-                    <div class="beat"></div>
-                }
-                <div class="float-page-container" cdkDragBoundary=".track-boundary" cdkDrag (cdkDragStarted)="dragStarted($event, $index)" [cdkDragConstrainPosition]="computeDragRenderPos.bind(this)">
-                    <mat-card class="float-page-card" [ngStyle]="{'width.px': getCardWidth($index) }">
+                <div class="float-page-container" cdkDragBoundary=".track-boundary" cdkDrag (cdkDragStarted)="dragStarted($event, page.id)" [cdkDragConstrainPosition]="computeDragRenderPos.bind(this)">
+                    <mat-card class="float-page-card" [ngStyle]="{'width.px': getCardWidth(page.id) }">
                         <span class="float-page-header"></span>
                         <mat-card-content style="text-align: center;">{{ page.getPreview() }}</mat-card-content>
                         <mat-card-actions class="float-page-actions">
@@ -36,6 +29,12 @@
                         </mat-card-actions>
                     </mat-card>
                 </div>
+                @for (bar of bars; track $index) {
+                    <div class="beat" id="first-beat" [ngStyle]="{'right.px': getCardWidth(page.id)}"></div>
+                    <div class="beat" [ngStyle]="{'right.px': getCardWidth(page.id)}"></div>
+                    <div class="beat" [ngStyle]="{'right.px': getCardWidth(page.id)}"></div>
+                    <div class="beat" [ngStyle]="{'right.px': getCardWidth(page.id)}"></div>
+                }
             </div>
         </div>
     }

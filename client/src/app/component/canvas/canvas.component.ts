@@ -1,4 +1,4 @@
-import { Component, HostListener, Input } from '@angular/core';
+import { Component, Directive, HostListener, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Page } from '../../model/page';
 import { PageComponent } from '../page/page.component';
@@ -79,7 +79,7 @@ export class CanvasComponent {
 
   getCardWidth(index: number): number {
     const duration = this.canvas.tracks[index].getFullDuration();
-    return duration > 4 ? duration * 44 : 176;
+    return duration > 8 ? duration * 16 : 128;
   }
 
   // https://stackoverflow.com/questions/70385721/angular-material-cdk-drag-and-drop-snap-to-grid-internal-element-cdkdragconstrai
