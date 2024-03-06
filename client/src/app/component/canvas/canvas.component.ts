@@ -23,6 +23,7 @@ export class CanvasComponent {
   @Input() bpm: number = 100;
   @Input() play: boolean = false;
   @Input() pause: boolean = false;
+  @Input() duration: number = 0;
 
   bars: number[] = [];
   
@@ -58,7 +59,6 @@ export class CanvasComponent {
     for(let i = 1; i <= bars; i++) {
       this.bars.push(i);
     }
-    alert("calculated canvas! " + this.bars.length);
   }
 
   newPage(): void { 
@@ -82,6 +82,10 @@ export class CanvasComponent {
     return duration > 8 ? duration * 16 : 128;
   }
 
+  getDurationPx(): number {
+    return this.duration / 15 * this.bpm * 4;
+  }
+
   // https://stackoverflow.com/questions/70385721/angular-material-cdk-drag-and-drop-snap-to-grid-internal-element-cdkdragconstrai
   dragStarted(event: CdkDragStart, index: number): void {
       this.dragStart = event.source.element.nativeElement.getBoundingClientRect();
@@ -92,6 +96,7 @@ export class CanvasComponent {
       const delta = pos.x - this.dragStart.x;
       let xPos = this.dragStart.x + Math.floor(delta / 16) * 16;
       this.canvas.tracks[this.dragIndex].start = (xPos - 112) / 16;
+      this.calculateCanvasBars();
       return {x: xPos, y: this.dragStart.y};
   }
 }

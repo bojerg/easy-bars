@@ -1,4 +1,5 @@
 .canvas {
+    position: relative;
     height: calc(100% - 4rem);
     overflow-x: scroll;
 }
@@ -6,8 +7,10 @@
 .track {
     height: 8em;
     display: flex;
+    position: relative;
     flex-wrap: nowrap;
     padding-bottom: 2px;
+    bottom: 7em;
 }
 
 .track-label-container {
@@ -29,6 +32,16 @@
 
 .mp3-beats {
     right: 0;
+}
+
+#waveform {
+    display: float;
+    z-index: 2;
+    position: relative;
+    bottom: 8.75em;
+    left: calc(2rem + 81px);
+    height: 7em;
+    width: 100%;
 }
 
 .beat:nth-child(odd) {
@@ -72,6 +85,7 @@
 
 #instrumental-track {
     margin-top: 4px;
+    bottom: 0;
 }
 
 .float-page-container {

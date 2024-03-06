@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, HostListener, Input } from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
@@ -9,6 +9,7 @@ import { CanvasComponent } from "../canvas/canvas.component";
 import { Subscription } from 'rxjs';
 import { HttpEventType } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import WaveSurfer from 'wavesurfer.js';
 
 @Component({
     selector: 'app-toolbar',
@@ -21,6 +22,9 @@ export class ToolbarComponent {
 [x: string]: any;
   bpm: number = 100.000;
   play: boolean = false;
+  duration: number = 0;
+
+  waveformOffset = 0;
   
   fileName = '';
   uploadProgress: number | null = null;
@@ -85,9 +89,37 @@ export class ToolbarComponent {
       })
       */
 
+      let waveform = WaveSurfer.create({
+        container: '#waveform',
+        waveColor: 'pink',
+        barHeight: 0.9,
+        autoplay: false,
+        autoScroll: false,
+        dragToSeek: false,
+        hideScrollbar: true,
+        cursorWidth: 0,
+        interact: false,
+        mediaControls: false
+      });
+      waveform.load(source);
       this.sound = new Howl({ src: [source], format: ['mp3']});
+      this.sound.on("load", (_: any) => {
+        this.duration = this.sound.duration();
+      });
     }
   }
+
+  @HostListener('scroll', ['$event']) private onScroll($event:Event):void {
+    console.log("SCROLL");
+  };
+
+  /*
+  onScroll(event: Event) {
+    this.waveformOffset = document.body.scrollLeft;
+    console.log(this.waveformOffset);
+  }
+  */
+
 
   cancelUpload() {
     this.uploadSub.unsubscribe();
