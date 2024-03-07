@@ -1,4 +1,7 @@
 <mat-toolbar id="toolbar">
+    <div id="canvas-menu">
+        <button mat-raised-button (click)="appCanvas.newPage()" id="new-page-btn"><span>New Page </span></button>
+    </div>
     <div id="playback-menu">
     @if(!play) {
         <button mat-mini-fab id="play-pause-btn" (click)="this.playFn()"><mat-icon class="playback-btn">play_arrow</mat-icon></button>
@@ -30,4 +33,4 @@
         <mat-icon class="cancel-upload" (click)="cancelUpload()" *ngIf="uploadProgress">delete_forever</mat-icon>
     </div>
 </mat-toolbar>
-<app-canvas  [bpm]="bpm" [play]="play" [duration]="duration" [mp3Name]="getMp3TrackLabel()"></app-canvas> <!-- (scroll)="onScroll($event)" -->
+<app-canvas  [bpm]="bpm" [play]="play" [duration]="duration" [mp3Name]="getMp3TrackLabel()" #appCanvas></app-canvas>
