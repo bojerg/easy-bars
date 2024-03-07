@@ -2,9 +2,7 @@
 
     <div class="track" id="instrumental-track">
         <div class="track-label-container">
-            <span class="track-label">
-                Beat Label
-            </span>
+            <span class="track-label">{{ mp3Name }}</span>
         </div>
         @for (bar of bars; track $index) {
             <div class="beat mp3-beats" id="first-beat"></div>

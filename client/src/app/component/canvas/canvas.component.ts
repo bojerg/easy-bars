@@ -24,6 +24,7 @@ export class CanvasComponent {
   @Input() play: boolean = false;
   @Input() pause: boolean = false;
   @Input() duration: number = 0;
+  @Input() mp3Name: string = "MP3 track";
 
   bars: number[] = [];
   

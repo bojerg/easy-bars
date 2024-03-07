@@ -109,17 +109,9 @@ export class ToolbarComponent {
     }
   }
 
-  @HostListener('scroll', ['$event']) private onScroll($event:Event):void {
-    console.log("SCROLL");
-  };
-
-  /*
-  onScroll(event: Event) {
-    this.waveformOffset = document.body.scrollLeft;
-    console.log(this.waveformOffset);
+  getMp3TrackLabel(): string {
+    return this.fileName !== '' ? this.fileName.substring(0, this.fileName.length - 4) : "MP3 Track";
   }
-  */
-
 
   cancelUpload() {
     this.uploadSub.unsubscribe();
