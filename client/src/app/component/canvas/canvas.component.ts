@@ -48,11 +48,10 @@ export class CanvasComponent {
   }
 
   calculateCanvasBars(): void {
-
-    let bars = 28;
-
+    let bars = Math.floor(((this.duration / 60) * this.bpm) / 4) + 2;
+    bars = bars > 28 ? bars : 28;
     this.canvas.tracks.forEach(page => {
-      const fullDur = page.getFullDuration() + page.start;
+      const fullDur = Math.floor((page.getFullDuration() + page.start) / 4) + 1;
       bars = fullDur > bars ? fullDur : bars;
     });
 

@@ -14,7 +14,7 @@
     </div>
     <div id="bpm-menu">
         <label for="bpm-input">BPM</label>
-        <input type="number" name="bpm-input" id="bpm-input" [value]="bpm" #bpmInput (input)="setBPM(bpmInput.value)">
+        <input type="number" name="bpm-input" id="bpm-input" [value]="bpm" #bpmInput (input)="setBPM(bpmInput.value); appCanvas.calculateCanvasBars()">
     </div>
     <div id="metronome-div">
         <label for="metronome">Metronome</label>
@@ -23,7 +23,7 @@
     <div id="mp3-info">
         <input type="file" class="file-input" (change)="onFileSelected($event)" accept=".mp3" #fileUpload>
         <div class="file-upload">
-            <span>MP3: {{fileName || "No file uploaded yet."}}</span>
+            <span>MP3: {{fileName || "No file uploaded yet"}}</span>
             <button mat-mini-fab color="primary" class="upload-btn" (click)="fileUpload.click()"><mat-icon>attach_file</mat-icon></button>
         </div>
         <div class="progress">
