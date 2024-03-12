@@ -1,4 +1,4 @@
-import { Component, Directive, HostListener, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Page } from '../../model/page';
 import { PageComponent } from '../page/page.component';
@@ -20,11 +20,12 @@ import { Subscription } from 'rxjs';
 
 export class CanvasComponent {
 
-  @Input() bpm: number = 100;
+  @Input() bpm: number = 0;
   @Input() play: boolean = false;
   @Input() pause: boolean = false;
   @Input() duration: number = 0;
   @Input() mp3Name: string = "";
+  @Input() refresh: boolean = false;
 
   bars: number[] = [];
   
@@ -59,6 +60,7 @@ export class CanvasComponent {
     for(let i = 1; i <= bars; i++) {
       this.bars.push(i);
     }
+    console.log(this.duration);
   }
 
   newPage(): void { 

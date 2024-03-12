@@ -1,4 +1,4 @@
-import { Component, HostListener, Input, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, Input, Output, ViewChild } from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
@@ -19,22 +19,19 @@ import WaveSurfer from 'wavesurfer.js';
     imports: [ CanvasComponent, MatTabsModule, MatToolbarModule, MatButtonModule, MatIconModule, MatProgressBarModule, CommonModule ]
 })
 export class ToolbarComponent {
-[x: string]: any;
   bpm: number = 100.000;
   play: boolean = false;
   duration: number = 0;
-
-  waveformOffset = 0;
-  
   fileName = '';
   uploadProgress: number | null = null;
   uploadSub!: Subscription;
-
+  waveform!: WaveSurfer;
   sound = new Howl({
     src: ['../../../assets/83 goopy.mp3'],
   });
 
-  waveform!: WaveSurfer;
+  @ViewChild('appCanvas')
+  canvas!: CanvasComponent;
 
   ngOnInit(): void {
     this.waveform = WaveSurfer.create({
@@ -110,8 +107,10 @@ export class ToolbarComponent {
       this.sound = new Howl({ src: [source], format: ['mp3']});
       this.sound.on("load", (_: any) => {
         this.duration = this.sound.duration();
+        //Need to set this manually due to angular not refreshing duration value before calcCanvasBars method runs
+        this.canvas.duration = this.duration;
+        this.canvas.calculateCanvasBars();
       });
-
     }
   }
 
