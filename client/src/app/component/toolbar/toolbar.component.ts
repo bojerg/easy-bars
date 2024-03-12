@@ -34,6 +34,23 @@ export class ToolbarComponent {
     src: ['../../../assets/83 goopy.mp3'],
   });
 
+  waveform!: WaveSurfer;
+
+  ngOnInit(): void {
+    this.waveform = WaveSurfer.create({
+      container: '#waveform',
+      waveColor: 'pink',
+      barHeight: 0.9,
+      autoplay: false,
+      autoScroll: false,
+      dragToSeek: false,
+      hideScrollbar: true,
+      cursorWidth: 0,
+      interact: false,
+      mediaControls: false
+    });
+  }
+
   playFn(): void {
     this.play = true;
     this.sound.play();
@@ -72,7 +89,7 @@ export class ToolbarComponent {
       const formData = new FormData();
       formData.append("thumbnail", file);
 
-      /*
+      /* waiting for backend
       const upload$ = this.http.post("/api/thumbnail-upload", formData, {
           reportProgress: true,
           observe: 'events'
@@ -80,7 +97,6 @@ export class ToolbarComponent {
       .pipe(
           finalize(() => this.reset())
       );
-      
     
       this.uploadSub = upload$.subscribe(event => {
         if (event.type == HttpEventType.UploadProgress) {
@@ -89,23 +105,13 @@ export class ToolbarComponent {
       })
       */
 
-      let waveform = WaveSurfer.create({
-        container: '#waveform',
-        waveColor: 'pink',
-        barHeight: 0.9,
-        autoplay: false,
-        autoScroll: false,
-        dragToSeek: false,
-        hideScrollbar: true,
-        cursorWidth: 0,
-        interact: false,
-        mediaControls: false
-      });
-      waveform.load(source);
+      // Load uploaded file into wavesurfer/howler, save duration value
+      this.waveform.load(source);
       this.sound = new Howl({ src: [source], format: ['mp3']});
       this.sound.on("load", (_: any) => {
         this.duration = this.sound.duration();
       });
+
     }
   }
 

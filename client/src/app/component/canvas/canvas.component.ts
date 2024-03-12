@@ -24,7 +24,7 @@ export class CanvasComponent {
   @Input() play: boolean = false;
   @Input() pause: boolean = false;
   @Input() duration: number = 0;
-  @Input() mp3Name: string = "MP3 track";
+  @Input() mp3Name: string = "";
 
   bars: number[] = [];
   
@@ -51,7 +51,7 @@ export class CanvasComponent {
     let bars = Math.floor(((this.duration / 60) * this.bpm) / 4) + 2;
     bars = bars > 28 ? bars : 28;
     this.canvas.tracks.forEach(page => {
-      const fullDur = Math.floor((page.getFullDuration() + page.start) / 4) + 1;
+      const fullDur = Math.floor((page.getFullDuration() + page.start) / 4) + 2;
       bars = fullDur > bars ? fullDur : bars;
     });
 
@@ -88,15 +88,16 @@ export class CanvasComponent {
 
   // https://stackoverflow.com/questions/70385721/angular-material-cdk-drag-and-drop-snap-to-grid-internal-element-cdkdragconstrai
   dragStarted(event: CdkDragStart, index: number): void {
-      this.dragStart = event.source.element.nativeElement.getBoundingClientRect();
-      this.dragIndex = index;
+    this.dragStart = event.source.element.nativeElement.getBoundingClientRect();
+    this.dragIndex = index;
   }
+
   computeDragRenderPos(pos: any, _: any): {x: number, y: number} {
-      // will render the element every 16 pixels horizontally
-      const delta = pos.x - this.dragStart.x;
-      let xPos = this.dragStart.x + Math.floor(delta / 16) * 16;
-      this.canvas.tracks[this.dragIndex].start = (xPos - 112) / 16;
-      this.calculateCanvasBars();
-      return {x: xPos, y: this.dragStart.y};
+    // will render the element every 16 pixels horizontally
+    const delta = pos.x - this.dragStart.x;
+    let xPos = this.dragStart.x + Math.floor(delta / 16) * 16;
+    this.canvas.tracks[this.dragIndex].start = (xPos - 112) / 16;
+    this.calculateCanvasBars();
+    return {x: xPos, y: this.dragStart.y};
   }
 }
