@@ -10,6 +10,14 @@ import { Canvas } from '../../model/canvas';
 import { ProjectService } from '../../service/project.service';
 import { Subscription } from 'rxjs';
 
+/*
+TODO:
+Add "perform" tab which shows lyrics and highlights on beat
+Flesh out page control UI and functionality
+Add playback position bar
+Fix dragging to not fixate on cursor position
+*/
+
 @Component({
   selector: 'app-canvas',
   standalone: true,

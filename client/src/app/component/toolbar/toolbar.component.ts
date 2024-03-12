@@ -11,6 +11,8 @@ import { HttpEventType } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import WaveSurfer from 'wavesurfer.js';
 
+//TODO: Add metronome!
+
 @Component({
     selector: 'app-toolbar',
     standalone: true,
@@ -18,6 +20,7 @@ import WaveSurfer from 'wavesurfer.js';
     styleUrl: './toolbar.component.scss',
     imports: [ CanvasComponent, MatTabsModule, MatToolbarModule, MatButtonModule, MatIconModule, MatProgressBarModule, CommonModule ]
 })
+
 export class ToolbarComponent {
   bpm: number = 100.000;
   play: boolean = false;

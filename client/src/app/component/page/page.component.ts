@@ -8,6 +8,14 @@ import { Page } from '../../model/page';
 import { Phrase } from '../../model/phrase';
 import { sampleLyrics } from '../../model/testBars';
 
+/*
+TODO
+Work on card styling to be simpler
+Rework split by newline to be an option rather than default
+Add "copy as plaintext" perhaps?
+Remove testBars.ts and references
+*/
+
 /** 
  * Simple interface to aid in controlling how to display the phrase currently being edited. 
  * @param index - index of the selected phrase in page.lyrics array

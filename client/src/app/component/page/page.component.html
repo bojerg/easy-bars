@@ -17,7 +17,7 @@
       </div>
       <button (click)="splitLyricsByWord()">Split by Word</button>
       <button (click)="deleteAll()">Delete All</button>
-      <button (click)="showLength = !showLength">{{ showLength ? "Hide length" : "Show length" }}</button>
+      <button (click)="showLength = !showLength">{{ showLength ? "Show length" : "Hide length" }}</button>
     </div>
     <button id="page-close" mat-raised-button color="primary" (click)="dialogRef.close()"><mat-icon>close</mat-icon></button>
   </mat-toolbar> 
@@ -38,7 +38,7 @@
       }
       @else if (selectedPhrase.index !== $index) {
         <mat-card-title>{{ phrase.content }}</mat-card-title>
-        @if(showLength) { <mat-card-footer>Length: {{ getBeats($index) }}</mat-card-footer> }
+        @if(!showLength) { <mat-card-footer>Length: {{ getBeats($index) }}</mat-card-footer> }
       }
       @else { <!-- Selected phrase -->
         @if (phrase.isPause) {
