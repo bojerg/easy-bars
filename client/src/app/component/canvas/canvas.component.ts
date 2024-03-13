@@ -13,9 +13,9 @@ import { MatTabsModule } from '@angular/material/tabs';
 
 /*
 TODO:
-Add "perform" tab which shows lyrics and highlights on beat
-Flesh out page control UI and functionality
+Complete perform tab showing lyrics-- highlighted on beat
 Add playback position bar
+Flesh out page control UI and functionality
 Fix dragging to not fixate on cursor position
 */
 

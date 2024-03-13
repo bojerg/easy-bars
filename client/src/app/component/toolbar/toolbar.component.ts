@@ -11,7 +11,11 @@ import { HttpEventType } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import WaveSurfer from 'wavesurfer.js';
 
-//TODO: Add metronome!
+/*
+TODO: 
+Create playback service (MP3 + metronome + Subscription for current sub-beat)
+Add metronome!
+*/
 
 @Component({
     selector: 'app-toolbar',
