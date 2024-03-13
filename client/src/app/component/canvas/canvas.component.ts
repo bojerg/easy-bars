@@ -9,6 +9,7 @@ import { CdkDragStart, DragDropModule } from '@angular/cdk/drag-drop';
 import { Canvas } from '../../model/canvas';
 import { ProjectService } from '../../service/project.service';
 import { Subscription } from 'rxjs';
+import { MatTabsModule } from '@angular/material/tabs';
 
 /*
 TODO:
@@ -21,7 +22,7 @@ Fix dragging to not fixate on cursor position
 @Component({
   selector: 'app-canvas',
   standalone: true,
-  imports: [MatCardModule, MatIconModule, DragDropModule, CommonModule],
+  imports: [MatCardModule, MatIconModule, MatTabsModule, DragDropModule, CommonModule],
   templateUrl: './canvas.component.html',
   styleUrl: './canvas.component.scss'
 })
@@ -68,7 +69,6 @@ export class CanvasComponent {
     for(let i = 1; i <= bars; i++) {
       this.bars.push(i);
     }
-    console.log(this.duration);
   }
 
   newPage(): void { 

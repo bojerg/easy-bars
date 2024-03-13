@@ -36,7 +36,7 @@ export class ToolbarComponent {
   @ViewChild('appCanvas')
   canvas!: CanvasComponent;
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     this.waveform = WaveSurfer.create({
       container: '#waveform',
       waveColor: 'pink',

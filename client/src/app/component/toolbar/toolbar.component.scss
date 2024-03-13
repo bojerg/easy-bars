@@ -46,3 +46,8 @@ button {
     border: 1px solid rgba(255, 255, 255, 0);
     font-size: xx-large;
 }
+
+app-canvas {
+    height: calc(100% - 4rem);
+    display: block;
+}

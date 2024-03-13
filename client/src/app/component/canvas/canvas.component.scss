@@ -1,7 +1,14 @@
+#tab-group {
+    height: 100%;
+}
+
+#tab-group mat-tab-body {
+    flex-grow: 1;
+}
+
 .canvas {
     position: relative;
-    height: calc(100% - 4rem);
-    overflow-x: scroll;
+    height: 100%;
 }
 
 .track {
