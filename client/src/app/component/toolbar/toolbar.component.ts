@@ -35,9 +35,6 @@ export class ToolbarComponent {
   playbackSub: Subscription = new Subscription;
   playback!: Playback;
   waveform!: WaveSurfer;
-  sound = new Howl({
-    src: ['../../../assets/83 goopy.mp3'],
-  });
 
   @ViewChild('appCanvas')
   canvas!: CanvasComponent;
@@ -65,17 +62,14 @@ export class ToolbarComponent {
 
   playFn(): void {
     this.playbackService.play(this.playback);
-    this.sound.play();
   }
 
   pauseFn(): void {
     this.playbackService.pause(this.playback);
-    this.sound.pause();
   }
 
   stopFn(): void {
     this.playbackService.stop(this.playback);
-    this.sound.stop();
   }
 
   setBPM(val: any): void {
@@ -84,13 +78,17 @@ export class ToolbarComponent {
       alert("BPM must be a number"); return; 
     }
     if (val < 0) { 
-      alert("BPM must be greater than 0"); return; 
+      alert("BPM must be greater than 24... are you crazy?"); return; 
     }
     if (val > 300) {  
       alert("BPM must be less than 300"); return;
     }
     
     this.playbackService.setBpm(Math.round(val * 1000) / 1000, this.playback); // 3 decimals max
+  }
+
+  onMetronomeCheck(event: any): void {
+    this.playbackService.setMetronome(event.target.checked, this.playback); 
   }
 
   onFileSelected(event: any) {
@@ -119,9 +117,10 @@ export class ToolbarComponent {
 
       // Load uploaded file into wavesurfer/howler, save duration value
       this.waveform.load(source);
-      this.sound = new Howl({ src: [source], format: ['mp3']});
-      this.sound.on("load", (_: any) => {
-        this.canvas.duration = this.sound.duration();
+      let instrumental = new Howl({ src: [source], format: ['mp3']});
+      instrumental.on("load", (_: any) => {
+        this.playbackService.instrumental = instrumental;
+        this.canvas.duration = instrumental.duration();
         this.canvas.calculateCanvasBars();
       });
     }

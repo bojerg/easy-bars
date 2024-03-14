@@ -18,7 +18,7 @@
     </div>
     <div id="metronome-div">
         <label for="metronome">Metronome</label>
-        <input type="checkbox" name="metronome" id="metronome">
+        <input (change)="onMetronomeCheck($event)" type="checkbox" name="metronome" id="metronome">
     </div>
     <div id="mp3-info">
         <input type="file" class="file-input" (change)="onFileSelected($event)" accept=".mp3" #fileUpload>
