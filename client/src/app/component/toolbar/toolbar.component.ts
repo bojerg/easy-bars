@@ -4,12 +4,14 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatIconModule } from '@angular/material/icon';
-import { Howl, Howler } from 'howler';
+import { Howl } from 'howler';
 import { CanvasComponent } from "../canvas/canvas.component";
 import { Subscription } from 'rxjs';
 import { HttpEventType } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import WaveSurfer from 'wavesurfer.js';
+import { Playback } from '../../model/playback';
+import { PlaybackService } from '../../service/playback.service';
 
 /*
 TODO: 
@@ -26,12 +28,12 @@ Add metronome!
 })
 
 export class ToolbarComponent {
-  bpm: number = 100.000;
-  play: boolean = false;
-  duration: number = 0;
   fileName = '';
   uploadProgress: number | null = null;
   uploadSub!: Subscription;
+
+  playbackSub: Subscription = new Subscription;
+  playback!: Playback;
   waveform!: WaveSurfer;
   sound = new Howl({
     src: ['../../../assets/83 goopy.mp3'],
@@ -39,6 +41,12 @@ export class ToolbarComponent {
 
   @ViewChild('appCanvas')
   canvas!: CanvasComponent;
+
+  constructor(private playbackService: PlaybackService) {}
+
+  ngOnInit(): void {
+    this.playbackSub = this.playbackService.playback.subscribe(playback => this.playback = playback);
+  }
 
   ngAfterViewInit(): void {
     this.waveform = WaveSurfer.create({
@@ -56,17 +64,17 @@ export class ToolbarComponent {
   }
 
   playFn(): void {
-    this.play = true;
+    this.playbackService.play(this.playback);
     this.sound.play();
   }
 
   pauseFn(): void {
-    this.play = false;
+    this.playbackService.pause(this.playback);
     this.sound.pause();
   }
 
   stopFn(): void {
-    this.play = false;
+    this.playbackService.stop(this.playback);
     this.sound.stop();
   }
 
@@ -82,7 +90,7 @@ export class ToolbarComponent {
       alert("BPM must be less than 300"); return;
     }
     
-    this.bpm = Math.round(val * 1000) / 1000; // 3 decimals max
+    this.playbackService.setBpm(Math.round(val * 1000) / 1000, this.playback); // 3 decimals max
   }
 
   onFileSelected(event: any) {
@@ -113,9 +121,7 @@ export class ToolbarComponent {
       this.waveform.load(source);
       this.sound = new Howl({ src: [source], format: ['mp3']});
       this.sound.on("load", (_: any) => {
-        this.duration = this.sound.duration();
-        //Need to set this manually due to angular not refreshing duration value before calcCanvasBars method runs
-        this.canvas.duration = this.duration;
+        this.canvas.duration = this.sound.duration();
         this.canvas.calculateCanvasBars();
       });
     }

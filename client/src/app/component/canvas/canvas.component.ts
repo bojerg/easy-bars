@@ -10,6 +10,7 @@ import { Canvas } from '../../model/canvas';
 import { ProjectService } from '../../service/project.service';
 import { Subscription } from 'rxjs';
 import { MatTabsModule } from '@angular/material/tabs';
+import { Playback } from '../../model/playback';
 
 /*
 TODO:
@@ -29,9 +30,7 @@ Fix dragging to not fixate on cursor position
 
 export class CanvasComponent {
 
-  @Input() bpm: number = 0;
-  @Input() play: boolean = false;
-  @Input() pause: boolean = false;
+  @Input() playback!: Playback;
   @Input() duration: number = 0;
   @Input() mp3Name: string = "";
   @Input() refresh: boolean = false;
@@ -58,7 +57,7 @@ export class CanvasComponent {
   }
 
   calculateCanvasBars(): void {
-    let bars = Math.floor(((this.duration / 60) * this.bpm) / 4) + 2;
+    let bars = Math.floor(((this.duration / 60) * this.playback.bpm) / 4) + 2;
     bars = bars > 28 ? bars : 28;
     this.canvas.tracks.forEach(page => {
       const fullDur = Math.floor((page.getFullDuration() + page.start) / 4) + 2;
@@ -93,7 +92,7 @@ export class CanvasComponent {
   }
 
   getDurationPx(): number {
-    return this.duration / 15 * this.bpm * 4;
+    return this.duration / 15 * this.playback.bpm * 4;
   }
 
   // https://stackoverflow.com/questions/70385721/angular-material-cdk-drag-and-drop-snap-to-grid-internal-element-cdkdragconstrai
