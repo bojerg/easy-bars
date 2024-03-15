@@ -42,7 +42,27 @@
                
     </mat-tab>
     <mat-tab label="Playback">
-        <!-- waiting for playback service -->
+        <div id="playback-toolbar">
+            @for(page of canvas.tracks; track $index) {
+                <div class="playback-select">
+                    <label>{{page.title}}: </label>
+                    <input type="checkbox" (change)="selectPlaybackPage($index, pbCheckbox.value)" [value]="checkPlaybackSelectStatus($index)" #pbCheckbox>
+                </div>
+            }
+        </div>
+        @if(selectedPages.primary !== -1) {
+            @for(phrase of canvas.tracks[selectedPages.primary].lyrics; track $index) {
+
+            }
+            @empty {
+                <p>{{canvas.tracks[selectedPages.primary].title}} has no lyrics</p>
+            }
+        }
+        @else {
+            <h2>Please select up to three pages</h2>
+            <p>The first page you select will be centered</p>
+        }
+        
     </mat-tab>
   </mat-tab-group>
   

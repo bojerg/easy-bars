@@ -20,6 +20,12 @@ Flesh out page control UI and functionality
 Fix dragging to not fixate on cursor position
 */
 
+export interface SelectedPages {
+  primary: number;
+  secondary: number;
+  tertiary: number;
+}
+
 @Component({
   selector: 'app-canvas',
   standalone: true,
@@ -33,7 +39,6 @@ export class CanvasComponent {
   @Input() playback!: Playback;
   @Input() duration: number = 0;
   @Input() mp3Name: string = "";
-  @Input() refresh: boolean = false;
 
   bars: number[] = [];
   
@@ -42,6 +47,12 @@ export class CanvasComponent {
 
   dragStart: any;
   dragIndex: number = -1;
+
+  selectedPages: SelectedPages = {
+    primary: -1,
+    secondary: -1,
+    tertiary: -1
+  }
 
   constructor(private dialog: MatDialog, private projectService: ProjectService) {}
 
@@ -93,6 +104,14 @@ export class CanvasComponent {
 
   getDurationPx(): number {
     return this.duration / 15 * this.playback.bpm * 4;
+  }
+
+  selectPlaybackPage(index: number, value: string) {
+
+  }
+
+  checkPlaybackSelectStatus(index: number): boolean {
+    return true;
   }
 
   // https://stackoverflow.com/questions/70385721/angular-material-cdk-drag-and-drop-snap-to-grid-internal-element-cdkdragconstrai
