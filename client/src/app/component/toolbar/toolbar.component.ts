@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, Input, Output, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
@@ -15,8 +15,8 @@ import { PlaybackService } from '../../service/playback.service';
 
 /*
 TODO: 
-Create playback service (MP3 + metronome + Subscription for current sub-beat)
-Add metronome!
+Test playback service's timing accuracy
+Saving and loading projects
 */
 
 @Component({
