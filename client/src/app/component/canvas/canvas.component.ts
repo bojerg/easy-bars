@@ -56,6 +56,9 @@ export class CanvasComponent {
   selectedIndex1: number = -1;
   selectedIndex2: number = -1;
   selectedIndex3: number = -1;
+  selectedBars1: PlaybackPhrase[][] = [];
+  selectedBars2: PlaybackPhrase[][] = [];
+  selectedBars3: PlaybackPhrase[][] = [];
 
   currentlySaying: PlaybackPhrase = {phrase: new Phrase("", 1024, true), bar: 0, beat: 0};
   notFoundSaying: boolean = true;
@@ -85,6 +88,8 @@ export class CanvasComponent {
     for(let i = 1; i <= bars; i++) {
       this.bars.push(i);
     }
+
+    this.setAllPageBars();
   }
 
   newPage(): void { 
@@ -112,33 +117,62 @@ export class CanvasComponent {
     return this.duration / 15 * this.playback.bpm * 4;
   }
 
-  // TODO: choke point, should do on saved changes
-  getPageBars(index: number): PlaybackPhrase[][] {
-    let bars: PlaybackPhrase[][] = [];
-    let beatCount = this.canvas.tracks[index].start;
-    let barCount = 0;
-
-    while(beatCount >= 4) {
-      beatCount -= 4;
-      barCount++;
-    }
+  setPageBars(index: number, selection: number) {
+    if(selection > 0 && selection < 4) {
+      if(index === -1) {
+        switch(selection) {
+          case 1: {
+            this.selectedBars1 = [];
+            break;
+          }
+          case 2: {
+            this.selectedBars2 = [];
+            break;
+          }
+          case 3: {
+            this.selectedBars3 = [];
+          }
+        }
+      } else {
+        let bars: PlaybackPhrase[][] = [];
+        let beatCount = this.canvas.tracks[index].start;
+        let barCount = 0;
     
-    this.canvas.tracks[index].lyrics.forEach(phrase => {
-      if(!bars[barCount]) bars[barCount] = [];
-      bars[barCount].push({
-        phrase: phrase,
-        bar: barCount,
-        beat: beatCount
-      });
-
-      beatCount += phrase.duration;
-      while(beatCount >= 4) {
-        beatCount -= 4;
-        barCount++;
+        while(beatCount >= 4) {
+          beatCount -= 4;
+          barCount++;
+        }
+        
+        this.canvas.tracks[index].lyrics.forEach(phrase => {
+          if(!bars[barCount]) bars[barCount] = [];
+          bars[barCount].push({
+            phrase: phrase,
+            bar: barCount,
+            beat: beatCount
+          });
+    
+          beatCount += phrase.duration;
+          while(beatCount >= 4) {
+            beatCount -= 4;
+            barCount++;
+          }
+        });
+  
+        switch(selection) {
+          case 1: {
+            this.selectedBars1 = bars;
+            break;
+          }
+          case 2: {
+            this.selectedBars2 = bars;
+            break;
+          }
+          case 3: {
+            this.selectedBars3 = bars;
+          }
+        }
       }
-    });
-
-    return bars;
+    }
   }
 
   isCurrentBar(phrase: PlaybackPhrase): boolean {
@@ -150,20 +184,8 @@ export class CanvasComponent {
   }
 
   setIfSaying(phrase: PlaybackPhrase): boolean {
-    if(this.playback.beat == phrase.beat) {
-      this.currentlySaying = phrase;
-      this.notFoundSaying = false;
-    }
+    if(this.playback.beat == phrase.beat) this.currentlySaying = phrase;
     return true;
-  }
-
-  resetSaying() {
-    this.notFoundSaying = true;
-  }
-
-  foundSaying(): string {
-    this.notFoundSaying = false;
-    return this.currentlySaying.phrase.content;
   }
 
   selectPlaybackPage(index: number) {
@@ -193,6 +215,14 @@ export class CanvasComponent {
       this.selectedIndex1 = this.selectedIndex2;
       this.selectedIndex2 = -1;
     }
+
+    this.setAllPageBars();
+  }
+
+  setAllPageBars() {
+    this.setPageBars(this.selectedIndex1, 1);
+    this.setPageBars(this.selectedIndex2, 2);
+    this.setPageBars(this.selectedIndex3, 3);
   }
 
   checkPlaybackSelectStatus(index: number): boolean {
