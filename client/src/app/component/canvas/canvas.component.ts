@@ -11,6 +11,7 @@ import { ProjectService } from '../../service/project.service';
 import { Subscription } from 'rxjs';
 import { MatTabsModule } from '@angular/material/tabs';
 import { Playback } from '../../model/playback';
+import { Phrase } from '../../model/phrase';
 
 /*
 TODO:
@@ -20,10 +21,10 @@ Flesh out page control UI and functionality
 Fix dragging to not fixate on cursor position
 */
 
-export interface SelectedPages {
-  primary: number;
-  secondary: number;
-  tertiary: number;
+export interface PlaybackPhrase {
+  phrase: Phrase;
+  bar: number;
+  beat: number;
 }
 
 @Component({
@@ -48,11 +49,9 @@ export class CanvasComponent {
   dragStart: any;
   dragIndex: number = -1;
 
-  selectedPages: SelectedPages = {
-    primary: -1,
-    secondary: -1,
-    tertiary: -1
-  }
+  selectedIndex1: number = -1;
+  selectedIndex2: number = -1;
+  selectedIndex3: number = -1;
 
   constructor(private dialog: MatDialog, private projectService: ProjectService) {}
 
@@ -106,12 +105,64 @@ export class CanvasComponent {
     return this.duration / 15 * this.playback.bpm * 4;
   }
 
-  selectPlaybackPage(index: number, value: string) {
+  getPageBars(index: number): PlaybackPhrase[][] {
+    let bars: PlaybackPhrase[][] = [];
+    let beatCount = this.canvas.tracks[index].start;
+    let barCount = 0;
 
+    while(beatCount >= 4) {
+      beatCount -= 4;
+      barCount++;
+    }
+    
+    this.canvas.tracks[index].lyrics.forEach(phrase => {
+      bars[barCount].push({
+        phrase: phrase,
+        bar: barCount,
+        beat: beatCount
+      });
+
+      beatCount += phrase.duration;
+      while(beatCount >= 4) {
+        beatCount -= 4;
+        barCount++;
+      }
+    });
+
+    return bars;
+  }
+
+  selectPlaybackPage(index: number) {
+    // selected index 1/2/3 as a hierarchy
+    if(this.selectedIndex1 === -1) {
+      this.selectedIndex1 = index;
+    } else if(this.selectedIndex1 === index) {
+      this.selectedIndex1 = -1;
+    } else if(this.selectedIndex2 === -1) {
+      this.selectedIndex2 = index;
+    } else if(this.selectedIndex2 === index) {
+      this.selectedIndex2 = -1;
+    } else if(this.selectedIndex3 === -1) {
+      this.selectedIndex3 = index;
+    } else if(this.selectedIndex3 === index) {
+      this.selectedIndex3 = -1;
+    } else {
+      this.selectedIndex3 = index;
+    }
+
+    //clean up gaps
+    if(this.selectedIndex2 === -1 && this.selectedIndex3 !== -1) {
+      this.selectedIndex2 = this.selectedIndex3;
+      this.selectedIndex3 = -1;
+    }
+    if(this.selectedIndex1 === -1 && this.selectedIndex2 !== -1) {
+      this.selectedIndex1 = this.selectedIndex2;
+      this.selectedIndex2 = -1;
+    }
   }
 
   checkPlaybackSelectStatus(index: number): boolean {
-    return true;
+    return this.selectedIndex1 === index || this.selectedIndex2 === index || this.selectedIndex3 === index;
   }
 
   // https://stackoverflow.com/questions/70385721/angular-material-cdk-drag-and-drop-snap-to-grid-internal-element-cdkdragconstrai

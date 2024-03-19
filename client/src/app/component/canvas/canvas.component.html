@@ -46,16 +46,38 @@
             @for(page of canvas.tracks; track $index) {
                 <div class="playback-select">
                     <label>{{page.title}}: </label>
-                    <input type="checkbox" (change)="selectPlaybackPage($index, pbCheckbox.value)" [value]="checkPlaybackSelectStatus($index)" #pbCheckbox>
+                    <input type="checkbox" (change)="selectPlaybackPage($index)" [checked]="checkPlaybackSelectStatus($index)">
                 </div>
             }
         </div>
-        @if(selectedPages.primary !== -1) {
-            @for(phrase of canvas.tracks[selectedPages.primary].lyrics; track $index) {
-
+        @if(selectedIndex1 !== -1) {
+            <div id="primary-playback-track">
+            @for(bar of getPageBars(selectedIndex1); track $index) {
+                <div>
+                @for(phraInterf of bar; track $index) {
+                    <p>{{phraInterf.phrase.content}} </p>
+                }
+                </div>
             }
             @empty {
-                <p>{{canvas.tracks[selectedPages.primary].title}} has no lyrics</p>
+                <p>{{canvas.tracks[selectedIndex1].title}} has no lyrics</p>
+            }
+            </div>
+            @if(selectedIndex2 !== -1) {
+                @for(phrase of canvas.tracks[selectedIndex2].lyrics; track $index) {
+                    
+                }
+                @empty {
+                    <p>{{canvas.tracks[selectedIndex2].title}} has no lyrics</p>
+                }
+                @if(selectedIndex3 !== -1) {
+                    @for(phrase of canvas.tracks[selectedIndex3].lyrics; track $index) {
+                        
+                    }
+                    @empty {
+                        <p>{{canvas.tracks[selectedIndex3].title}} has no lyrics</p>
+                    }
+                }
             }
         }
         @else {
