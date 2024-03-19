@@ -53,9 +53,41 @@
         @if(selectedIndex1 !== -1) {
             <div id="primary-playback-track">
             @for(bar of getPageBars(selectedIndex1); track $index) {
+                @if($first) {
+                    {{resetSaying()}}
+                }
                 <div>
-                @for(phraInterf of bar; track $index) {
-                    <p>{{phraInterf.phrase.content}} </p>
+                @for(pbPhrase of bar; track $index) {
+                    @if (playback.bar < pbPhrase.bar) {
+
+                        <p class="unsaid">{{pbPhrase.phrase.content}} </p>
+
+                    }
+
+                    @else if (isCurrentBar(pbPhrase)) {
+
+                        @if(playback.beat < pbPhrase.beat)  {
+                            <p class="unsaid">{{pbPhrase.phrase.content}} </p>
+                        }
+                        @else if( playback.beat <= currentlySaying.beat + currentlySaying.phrase.duration) {
+                            @if(playback.paused || playback.playing) {
+                                <p class="saying">{{foundSaying()}}</p>
+                            }
+                            @else {
+                                <p class="unsaid">{{foundSaying()}}</p>
+                            }
+                        }
+                        @else {
+                            <p class="said">{{pbPhrase.phrase.content}} </p>
+                        }
+                    }
+
+                    @else { 
+                        @if(notFoundSaying && playback.beat + (playback.bar * 4) <= currentlySaying.beat + currentlySaying.phrase.duration) {
+                            <p class="saying">{{foundSaying()}}</p>
+                        }
+                        <p class="said">{{pbPhrase.phrase.content}} </p>
+                    }
                 }
                 </div>
             }

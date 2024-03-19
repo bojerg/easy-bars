@@ -6,6 +6,7 @@
     flex-grow: 1;
 }
 
+/* CANVAS */
 .canvas {
     position: relative;
     height: 100%;
@@ -99,4 +100,18 @@
 .track-boundary {
     display: flex;
     flex-wrap: nowrap;
+}
+
+/* PLAYBACK */
+
+.unsaid {
+    color: whitesmoke;
+}
+
+.said {
+    color: yellow;
+}
+
+.saying {
+    color: #AA1851; 
 }

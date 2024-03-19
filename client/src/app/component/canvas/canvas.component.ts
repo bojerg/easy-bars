@@ -8,10 +8,11 @@ import { MatCardModule } from '@angular/material/card';
 import { CdkDragStart, DragDropModule } from '@angular/cdk/drag-drop';
 import { Canvas } from '../../model/canvas';
 import { ProjectService } from '../../service/project.service';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { MatTabsModule } from '@angular/material/tabs';
 import { Playback } from '../../model/playback';
 import { Phrase } from '../../model/phrase';
+import { PlaybackService } from '../../service/playback.service';
 
 /*
 TODO:
@@ -37,7 +38,7 @@ export interface PlaybackPhrase {
 
 export class CanvasComponent {
 
-  @Input() playback!: Playback;
+  
   @Input() duration: number = 0;
   @Input() mp3Name: string = "";
 
@@ -46,12 +47,18 @@ export class CanvasComponent {
   canvasSub: Subscription = new Subscription;
   canvas!: Canvas;
 
+  //playbackSub: Subscription = new Subscription;
+  @Input() playback!: Playback;
+
   dragStart: any;
   dragIndex: number = -1;
 
   selectedIndex1: number = -1;
   selectedIndex2: number = -1;
   selectedIndex3: number = -1;
+
+  currentlySaying: PlaybackPhrase = {phrase: new Phrase("", 1024, true), bar: 0, beat: 0};
+  notFoundSaying: boolean = true;
 
   constructor(private dialog: MatDialog, private projectService: ProjectService) {}
 
@@ -105,6 +112,7 @@ export class CanvasComponent {
     return this.duration / 15 * this.playback.bpm * 4;
   }
 
+  // TODO: choke point, should do on saved changes
   getPageBars(index: number): PlaybackPhrase[][] {
     let bars: PlaybackPhrase[][] = [];
     let beatCount = this.canvas.tracks[index].start;
@@ -116,6 +124,7 @@ export class CanvasComponent {
     }
     
     this.canvas.tracks[index].lyrics.forEach(phrase => {
+      if(!bars[barCount]) bars[barCount] = [];
       bars[barCount].push({
         phrase: phrase,
         bar: barCount,
@@ -130,6 +139,31 @@ export class CanvasComponent {
     });
 
     return bars;
+  }
+
+  isCurrentBar(phrase: PlaybackPhrase): boolean {
+    if(this.playback.bar == phrase.bar) {
+      return this.notFoundSaying ? this.setIfSaying(phrase) : true;
+    } else {
+      return false;
+    }
+  }
+
+  setIfSaying(phrase: PlaybackPhrase): boolean {
+    if(this.playback.beat == phrase.beat) {
+      this.currentlySaying = phrase;
+      this.notFoundSaying = false;
+    }
+    return true;
+  }
+
+  resetSaying() {
+    this.notFoundSaying = true;
+  }
+
+  foundSaying(): string {
+    this.notFoundSaying = false;
+    return this.currentlySaying.phrase.content;
   }
 
   selectPlaybackPage(index: number) {
