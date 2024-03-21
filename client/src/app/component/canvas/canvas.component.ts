@@ -8,7 +8,7 @@ import { MatCardModule } from '@angular/material/card';
 import { CdkDragStart, DragDropModule } from '@angular/cdk/drag-drop';
 import { Canvas } from '../../model/canvas';
 import { ProjectService } from '../../service/project.service';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { MatTabsModule } from '@angular/material/tabs';
 import { Playback } from '../../model/playback';
 import { Phrase } from '../../model/phrase';
@@ -24,7 +24,6 @@ Fix dragging to not fixate on cursor position
 
 export interface PlaybackPhrase {
   phrase: Phrase;
-  bar: number;
   beat: number;
 }
 
@@ -59,9 +58,6 @@ export class CanvasComponent {
   selectedBars1: PlaybackPhrase[][] = [];
   selectedBars2: PlaybackPhrase[][] = [];
   selectedBars3: PlaybackPhrase[][] = [];
-
-  currentlySaying: PlaybackPhrase = {phrase: new Phrase("", 1024, true), bar: 0, beat: 0};
-  notFoundSaying: boolean = true;
 
   constructor(private dialog: MatDialog, private projectService: ProjectService) {}
 
@@ -147,8 +143,7 @@ export class CanvasComponent {
           if(!bars[barCount]) bars[barCount] = [];
           bars[barCount].push({
             phrase: phrase,
-            bar: barCount,
-            beat: beatCount
+            beat: beatCount + (barCount * 4)
           });
     
           beatCount += phrase.duration;
@@ -173,19 +168,6 @@ export class CanvasComponent {
         }
       }
     }
-  }
-
-  isCurrentBar(phrase: PlaybackPhrase): boolean {
-    if(this.playback.bar == phrase.bar) {
-      return this.notFoundSaying ? this.setIfSaying(phrase) : true;
-    } else {
-      return false;
-    }
-  }
-
-  setIfSaying(phrase: PlaybackPhrase): boolean {
-    if(this.playback.beat == phrase.beat) this.currentlySaying = phrase;
-    return true;
   }
 
   selectPlaybackPage(index: number) {

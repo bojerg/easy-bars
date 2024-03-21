@@ -50,69 +50,6 @@
                 </div>
             }
         </div>
-        @if(selectedIndex1 !== -1) {
-            <div id="primary-playback-track">
-            @for(bar of selectedBars1; track $index) {
-                <div>
-                @for(pbPhrase of bar; track $index) {
-                    @if (playback.bar < pbPhrase.bar) {
-
-                        <p class="unsaid">{{pbPhrase.phrase.content}} </p>
-
-                    }
-
-                    @else if (isCurrentBar(pbPhrase)) {
-
-                        @if(playback.beat < pbPhrase.beat)  {
-                            <p class="unsaid">{{pbPhrase.phrase.content}} </p>
-                        }
-                        @else if( playback.beat <= currentlySaying.beat + currentlySaying.phrase.duration) {
-                            @if(playback.paused || playback.playing) {
-                                <p class="saying">{{pbPhrase.phrase.content}}</p>
-                            }
-                            @else {
-                                <p class="unsaid">{{pbPhrase.phrase.content}}</p>
-                            }
-                        }
-                        @else {
-                            <p class="said">{{pbPhrase.phrase.content}} </p>
-                        }
-                    }
-
-                    @else { 
-                        @if(playback.beat + (playback.bar * 4) <= currentlySaying.beat + currentlySaying.phrase.duration) {
-                            <p class="saying">{{pbPhrase.phrase.content}}</p>
-                        }
-                        <p class="said">{{pbPhrase.phrase.content}} </p>
-                    }
-                }
-                </div>
-            }
-            @empty {
-                <p>{{canvas.tracks[selectedIndex1].title}} has no lyrics</p>
-            }
-            </div>
-            @if(selectedIndex2 !== -1) {
-                @for(phrase of canvas.tracks[selectedIndex2].lyrics; track $index) {
-                    
-                }
-                @empty {
-                    <p>{{canvas.tracks[selectedIndex2].title}} has no lyrics</p>
-                }
-                @if(selectedIndex3 !== -1) {
-                    @for(phrase of canvas.tracks[selectedIndex3].lyrics; track $index) {
-                        
-                    }
-                    @empty {
-                        <p>{{canvas.tracks[selectedIndex3].title}} has no lyrics</p>
-                    }
-                }
-            }
-        }
-        @else {
-            <h2>Please select up to three pages</h2>
-            <p>The first page you select will be centered</p>
-        }
         
     </mat-tab>
   </mat-tab-group>
