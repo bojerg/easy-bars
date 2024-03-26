@@ -29,13 +29,6 @@ export interface PlaybackPhrase {
   delay: string;
 }
 
-export const phraseAnimation = animation([
-  style({
-    color: '{{ backgroundColor }}'
-  }),
-  animate('{{ time }}'),
-]);
-
 @Component({
   selector: 'app-canvas',
   standalone: true,
