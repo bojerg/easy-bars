@@ -13,7 +13,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { Playback } from '../../model/playback';
 import { Phrase } from '../../model/phrase';
 import { PlaybackService } from '../../service/playback.service';
-import { AnimationOptions, animate, animation, state, style, transition, trigger, useAnimation } from '@angular/animations';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 /*
 TODO:
@@ -40,9 +40,9 @@ export interface PlaybackPhrase {
       state('reset', style({color: 'whitesmoke'})),
       state('say', style({color: 'yellow'})),
       state('said', style({color: 'yellow'})),
-      transition('* => reset', [animate('0ms')]),
-      transition('* => said', [animate('0ms')]),
-      transition('* => say', [animate('{{time}} {{delay}}')])
+      transition('* => reset', [animate('1ms')]),
+      transition('* => said', [animate('1ms')]),
+      transition('* => say', [animate('1ms {{delay}}')])
     ])
   ]
 })
@@ -160,7 +160,7 @@ export class CanvasComponent {
           if(!bars[barCount]) bars[barCount] = [];
 
           const onBeat = beatCount + (barCount * 4);
-          const delay = ((60000 / this.playback.bpm) * onBeat).toString() + "ms";
+          const delay = ((60000 / this.playback.bpm) * onBeat).toString() + 'ms';
 
           bars[barCount].push({
             phrase: phrase,

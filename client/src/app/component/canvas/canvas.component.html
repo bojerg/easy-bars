@@ -56,7 +56,7 @@
                     @if(playback.paused) {
                         <p [@saySaidReset]="{value: phrase.beat < playback.beat + (playback.bar * 4) ? 'said' : 'reset'}">{{phrase.phrase.content}} </p>
                     } @else {
-                        <p [@saySaidReset]="{value: playbackTrigger, params: {time: phrase.phrase.duration + 'ms', delay: phrase.delay}}">{{phrase.phrase.content}} </p>
+                        <p [@saySaidReset]="{value: playbackTrigger, params: {delay: phrase.delay}}">{{phrase.phrase.content}} </p>
                     }
                 }
                 </div>
