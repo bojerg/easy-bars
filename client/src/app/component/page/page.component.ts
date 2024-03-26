@@ -12,7 +12,7 @@ import { sampleLyrics } from '../../model/testBars';
 TODO
 Work on card styling to be simpler
 Rework split by newline to be an option rather than default
-Add "copy as plaintext" perhaps?
+Add "copy as plaintext"
 Remove testBars.ts and references
 */
 

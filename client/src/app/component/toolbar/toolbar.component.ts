@@ -13,11 +13,7 @@ import WaveSurfer from 'wavesurfer.js';
 import { Playback } from '../../model/playback';
 import { PlaybackService } from '../../service/playback.service';
 
-/*
-TODO: 
-Test playback service's timing accuracy
-Saving and loading projects
-*/
+//TODO: Saving and loading projects
 
 @Component({
     selector: 'app-toolbar',

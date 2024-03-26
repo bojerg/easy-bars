@@ -17,9 +17,9 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 
 /*
 TODO:
-Complete perform tab showing lyrics-- highlighted on beat
+Playback scroll + hide lyrics far from playback position
 Add playback position bar
-Flesh out page control UI and functionality
+Flesh out Page control UI and functionality
 Fix dragging to not fixate on cursor position
 */
 

@@ -41,7 +41,7 @@
         @if(!showLength) { <mat-card-footer>Length: {{ getBeats($index) }}</mat-card-footer> }
       }
       @else { <!-- Selected phrase -->
-        @if (phrase.isPause) {
+        @if (phrase.isPause && selectedPhrase.mode !== 'time') {
           <mat-card-title>Length: {{ getBeats($index) }}</mat-card-title>
           <mat-card-footer>Pause</mat-card-footer>
         }
@@ -52,7 +52,9 @@
           <textarea name="phrase-textarea" class="phrase-textarea" cols="{{ screenWidth / 14 }}" rows="{{ screenHeight / 36 }}" value="{{ phrase.content }}" (blur)="saveAndCloseContentEditor($index)" #active></textarea>
         }
         @else if (selectedPhrase.mode === 'time') {
-          <mat-card-footer>{{ phrase.content }}</mat-card-footer>
+          @if (!phrase.isPause) {
+            <mat-card-footer>{{ phrase.content }}</mat-card-footer>
+          }
           <input type="range" name="timeSlider" id="time-slider" value="{{phrase.duration}}" min="{{selectedPhrase.stepSize}}" max="{{selectedPhrase.stepSize * 128}}" step="{{selectedPhrase.stepSize}}" (change)="this.updateUndoStack(false); phrase.duration = timeSlider.valueAsNumber" list="steplist" #timeSlider>
           <label for="time-slider" id="time-slider-label">
             <button (click)="timeNotchDown($index)"><mat-icon>keyboard_arrow_left</mat-icon></button>

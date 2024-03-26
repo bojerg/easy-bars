@@ -108,3 +108,24 @@
     display: flex;
     gap: 0.25em;
 }
+
+.playback-container {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    gap: 1rem;
+}
+
+#selected-primary {
+    border: 0.25em solid rgba(255, 255, 255, 0.103);
+    border-radius: 13px;
+} 
+
+.selected-div {
+    padding: 0.5em;
+}
+
+
+.selected-div > h3 {
+    text-align: center;
+}
