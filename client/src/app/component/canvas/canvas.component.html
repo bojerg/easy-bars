@@ -50,7 +50,11 @@
                 </div>
             }
         </div>
-        
+            @for(bar of selectedBars1; track $index) {
+                @for(phrase of bar; track $index) {
+                    <p [@sayReset]="{value: playbackTrigger, params: {time: phrase.phrase.duration + 'ms', delay: phrase.delay}}">{{phrase.phrase.content}} </p>
+                }
+            }
     </mat-tab>
   </mat-tab-group>
   

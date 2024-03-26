@@ -13,6 +13,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { Playback } from '../../model/playback';
 import { Phrase } from '../../model/phrase';
 import { PlaybackService } from '../../service/playback.service';
+import { AnimationOptions, animate, animation, state, style, transition, trigger, useAnimation } from '@angular/animations';
 
 /*
 TODO:
@@ -25,18 +26,33 @@ Fix dragging to not fixate on cursor position
 export interface PlaybackPhrase {
   phrase: Phrase;
   beat: number;
+  delay: string;
 }
+
+export const phraseAnimation = animation([
+  style({
+    color: '{{ backgroundColor }}'
+  }),
+  animate('{{ time }}'),
+]);
 
 @Component({
   selector: 'app-canvas',
   standalone: true,
   imports: [MatCardModule, MatIconModule, MatTabsModule, DragDropModule, CommonModule],
   templateUrl: './canvas.component.html',
-  styleUrl: './canvas.component.scss'
+  styleUrl: './canvas.component.scss',
+  animations: [
+    trigger('sayReset', [
+      state('reset', style({color: 'whitesmoke'})),
+      state('say', style({color: 'yellow'})),
+      transition('* => reset', [animate('0ms')]),
+      transition('* => say', [animate('{{time}} {{delay}}')]) 
+    ])
+  ]
 })
 
 export class CanvasComponent {
-
   
   @Input() duration: number = 0;
   @Input() mp3Name: string = "";
@@ -46,8 +62,9 @@ export class CanvasComponent {
   canvasSub: Subscription = new Subscription;
   canvas!: Canvas;
 
-  //playbackSub: Subscription = new Subscription;
-  @Input() playback!: Playback;
+  playbackSub: Subscription = new Subscription;
+  playback!: Playback;
+  playbackTrigger: string = "reset";
 
   dragStart: any;
   dragIndex: number = -1;
@@ -59,9 +76,14 @@ export class CanvasComponent {
   selectedBars2: PlaybackPhrase[][] = [];
   selectedBars3: PlaybackPhrase[][] = [];
 
-  constructor(private dialog: MatDialog, private projectService: ProjectService) {}
+  constructor(private dialog: MatDialog, private projectService: ProjectService, private playbackService: PlaybackService) {}
 
   ngOnInit() {
+    this.playbackSub = this.playbackService.playback.subscribe(playback => {
+      this.playback = playback;
+      this.playbackTrigger = playback.playing ? "say" : "reset";
+    });
+
     this.projectService.canvas.subscribe(canvas => {
       this.canvas = canvas;
       this.calculateCanvasBars();
@@ -141,9 +163,14 @@ export class CanvasComponent {
         
         this.canvas.tracks[index].lyrics.forEach(phrase => {
           if(!bars[barCount]) bars[barCount] = [];
+
+          const onBeat = beatCount + (barCount * 4);
+          const delay = ((60000 / this.playback.bpm) * onBeat).toString() + "ms";
+
           bars[barCount].push({
             phrase: phrase,
-            beat: beatCount + (barCount * 4)
+            beat: onBeat,
+            delay: delay
           });
     
           beatCount += phrase.duration;
