@@ -104,14 +104,7 @@
 
 /* PLAYBACK */
 
-.unsaid {
-    color: whitesmoke;
-}
-
-.said {
-    color: yellow;
-}
-
-.saying {
-    color: #AA1851; 
+.playbackBar {
+    display: flex;
+    gap: 0.25em;
 }

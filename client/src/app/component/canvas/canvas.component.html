@@ -51,9 +51,15 @@
             }
         </div>
             @for(bar of selectedBars1; track $index) {
+                <div class="playbackBar">
                 @for(phrase of bar; track $index) {
-                    <p [@sayReset]="{value: playbackTrigger, params: {time: phrase.phrase.duration + 'ms', delay: phrase.delay}}">{{phrase.phrase.content}} </p>
+                    @if(playback.paused) {
+                        <p [@saySaidReset]="{value: phrase.beat < playback.beat + (playback.bar * 4) ? 'said' : 'reset'}">{{phrase.phrase.content}} </p>
+                    } @else {
+                        <p [@saySaidReset]="{value: playbackTrigger, params: {time: phrase.phrase.duration + 'ms', delay: phrase.delay}}">{{phrase.phrase.content}} </p>
+                    }
                 }
+                </div>
             }
     </mat-tab>
   </mat-tab-group>

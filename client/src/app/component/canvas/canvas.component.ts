@@ -43,11 +43,13 @@ export const phraseAnimation = animation([
   templateUrl: './canvas.component.html',
   styleUrl: './canvas.component.scss',
   animations: [
-    trigger('sayReset', [
+    trigger('saySaidReset', [
       state('reset', style({color: 'whitesmoke'})),
       state('say', style({color: 'yellow'})),
+      state('said', style({color: 'yellow'})),
       transition('* => reset', [animate('0ms')]),
-      transition('* => say', [animate('{{time}} {{delay}}')]) 
+      transition('* => said', [animate('0ms')]),
+      transition('* => say', [animate('{{time}} {{delay}}')])
     ])
   ]
 })
