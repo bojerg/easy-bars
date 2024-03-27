@@ -17,6 +17,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 
 /*
 TODO:
+Fix metronome playing forever after mp3 stops
 Playback scroll + hide lyrics far from playback position
 Keep track label containers visible on scroll
 Fix page width being a mile longer than needed
@@ -246,6 +247,7 @@ export class CanvasComponent {
     const delta = pos.x - this.dragStart.x;
     let xPos = this.dragStart.x + Math.floor(delta / 16) * 16;
     this.canvas.tracks[this.dragIndex].start = (xPos - 112) / 16;
+    this.projectService.updateProject(this.canvas);
     this.calculateCanvasBars();
     return {x: xPos, y: this.dragStart.y};
   }
