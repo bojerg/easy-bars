@@ -10,8 +10,7 @@ import { sampleLyrics } from '../../model/testBars';
 
 /*
 TODO
-Work on card styling to be simpler
-Rework split by newline to be an option rather than default
+Rework time controls
 Add "copy as plaintext"
 Remove testBars.ts and references
 */
@@ -25,6 +24,7 @@ Remove testBars.ts and references
 export interface SelectedPhrase {
   index: number,
   mode: string,
+  menu: boolean,
   stepSize: number
 }
 
@@ -42,6 +42,7 @@ export class PageComponent {
   selectedPhrase: SelectedPhrase = {
     index: 0,
     mode: '',
+    menu: false,
     stepSize: 0.0625
   }
 
@@ -309,7 +310,7 @@ export class PageComponent {
   }
 
   toggleActive(index: number): void {
-    if(this.selectedPhrase.mode === '' && this.selectedPhrase.index === index) this.selectedPhrase.index = -1;
+    if(this.selectedPhrase.mode === '' && this.selectedPhrase.menu === false && this.selectedPhrase.index === index) this.selectedPhrase.index = -1;
     else this.selectedPhrase.index = index;
   }
 

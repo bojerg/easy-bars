@@ -79,7 +79,8 @@
 
 .phrase-card {
   min-width: 6rem;
-  min-height: 4rem;
+  min-height: 2.5rem;
+  padding: 0 0.25em;
   background-color: rgba(255,255,255,0.05);
 }
 
@@ -102,11 +103,22 @@
 .phrase-textarea {
   white-space: pre-wrap;
   font-size: x-large;
+  background-color: rgba(170,24,81,0.07);
+  color: whitesmoke;
+  border: 0 solid;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  scrollbar-color: rgb(170,24,81)rgba(255,255,255,0.05);
+  scrollbar-width: thin;
 }
 
 #time-slider-label {
   display: flex;
   justify-content: space-between;
+}
+
+#hide-show-len-btn {
+  min-width: 84px;
 }
 
 .break {

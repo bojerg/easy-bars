@@ -17,7 +17,7 @@
       </div>
       <button (click)="splitLyricsByWord()">Split by Word</button>
       <button (click)="deleteAll()">Delete All</button>
-      <button (click)="showLength = !showLength">{{ showLength ? "Show length" : "Hide length" }}</button>
+      <button (click)="showLength = !showLength" id="hide-show-len-btn">{{ showLength ? "Show length" : "Hide length" }}</button>
     </div>
     <button id="page-close" mat-raised-button color="primary" (click)="dialogRef.close()"><mat-icon>close</mat-icon></button>
   </mat-toolbar> 
@@ -74,43 +74,43 @@
         <mat-card-actions class="phrase-card-actions">
           @if(phrase.isPause) {
             <button mat-button (click)="toggleTimeMode()"><mat-icon>timer</mat-icon></button>
-            <button mat-button [matMenuTriggerFor]="pauseMenu" (click)="selectedPhrase.mode = 'menu'"><mat-icon>menu</mat-icon></button>
+            <button mat-button [matMenuTriggerFor]="pauseMenu" (click)="selectedPhrase.menu = true"><mat-icon>menu</mat-icon></button>
           }
           @else {
             <button mat-button (click)="toggleContentMode()"><mat-icon>create</mat-icon></button>
             <button mat-button (click)="toggleTimeMode()"><mat-icon>timer</mat-icon></button>
-            <button mat-button [matMenuTriggerFor]="phraseMenu" (click)="selectedPhrase.mode = 'menu'"><mat-icon>menu</mat-icon></button>
             @if(selectedPhrase.mode === 'notepad' || selectedPhrase.mode === 'content') {
               <button mat-button (click)="saveAndCloseContentEditor($index)"><mat-icon>save</mat-icon></button>
             }
+            <button mat-button [matMenuTriggerFor]="phraseMenu" (click)="selectedPhrase.menu = true"><mat-icon>menu</mat-icon></button>
           }
         </mat-card-actions>
 
         <mat-menu #phraseMenu>
-          <button mat-menu-item (click)="selectedPhrase.mode = 'notepad'">Notepad mode</button>
-          <button mat-menu-item [matMenuTriggerFor]="splitMenu" (click)="selectedPhrase.mode = 'menu'">Split</button>
-          <button mat-menu-item [matMenuTriggerFor]="mergeMenu" (click)="selectedPhrase.mode = 'menu'">Merge</button>
-          <button mat-menu-item [matMenuTriggerFor]="moveMenu" (click)="selectedPhrase.mode = 'menu'">Move</button>
-          <button mat-menu-item [matMenuTriggerFor]="insertMenu" (click)="selectedPhrase.mode = 'menu'">Insert</button>
-          <button mat-menu-item (click)="duplicatePhrase($index)">Duplicate</button>
-          <button mat-menu-item (click)="deletePhrase($index)">Delete</button>
+          <button mat-menu-item (click)="selectedPhrase.mode = 'notepad'; selectedPhrase.menu = false">Notepad mode</button>
+          <button mat-menu-item [matMenuTriggerFor]="splitMenu" (click)="selectedPhrase.menu = true">Split</button>
+          <button mat-menu-item [matMenuTriggerFor]="mergeMenu" (click)="selectedPhrase.menu = true">Merge</button>
+          <button mat-menu-item [matMenuTriggerFor]="moveMenu" (click)="selectedPhrase.menu = true">Move</button>
+          <button mat-menu-item [matMenuTriggerFor]="insertMenu" (click)="selectedPhrase.menu = true">Insert</button>
+          <button mat-menu-item (click)="duplicatePhrase($index); selectedPhrase.menu = false">Duplicate</button>
+          <button mat-menu-item (click)="deletePhrase($index); selectedPhrase.menu = false">Delete</button>
         </mat-menu>
 
         <mat-menu #splitMenu>
-          <button mat-menu-item (click)="selectedPhrase.mode = 'split'">Interactive split</button>
-          <button mat-menu-item (click)="splitPhraseByWord($index)">Split by word</button>
+          <button mat-menu-item (click)="selectedPhrase.mode = 'split'; selectedPhrase.menu = false">Interactive split</button>
+          <button mat-menu-item (click)="splitPhraseByWord($index); selectedPhrase.menu = false">Split by word</button>
         </mat-menu>
         
         <mat-menu #mergeMenu>
           @if($first) {
             <button mat-menu-item disabled>Left merge</button>
           } @else {
-            <button mat-menu-item (click)="mergePhraseLeft($index)">Left merge</button>
+            <button mat-menu-item (click)="mergePhraseLeft($index); selectedPhrase.menu = false">Left merge</button>
           }
           @if($last) {
             <button mat-menu-item disabled>Right merge</button>
           } @else {
-            <button mat-menu-item (click)="mergePhraseRight($index)">Right merge</button>
+            <button mat-menu-item (click)="mergePhraseRight($index); selectedPhrase.menu = false">Right merge</button>
           }
         </mat-menu>
 
@@ -118,26 +118,26 @@
           @if($first) {
             <button mat-menu-item disabled>Move left</button>
           } @else {
-            <button mat-menu-item (click)="moveLeft($index)">Move left</button>
+            <button mat-menu-item (click)="moveLeft($index); selectedPhrase.menu = false">Move left</button>
           }
           @if($last) {
             <button mat-menu-item disabled>Move right</button>
           } @else {
-            <button mat-menu-item (click)="moveRight($index)">Move right</button>
+            <button mat-menu-item (click)="moveRight($index); selectedPhrase.menu = false">Move right</button>
           }
         </mat-menu>
 
         <mat-menu #insertMenu>
-            <button mat-menu-item (click)="addNewPhraseLeft($index)">New phrase before</button>
-            <button mat-menu-item (click)="addNewPhraseRight($index)">New phrase after</button>
-            <button mat-menu-item (click)="addPauseLeft($index)">Pause before</button>
-            <button mat-menu-item (click)="addPauseRight($index)">Pause after</button>
+            <button mat-menu-item (click)="addNewPhraseLeft($index); selectedPhrase.menu = false">New phrase before</button>
+            <button mat-menu-item (click)="addNewPhraseRight($index); selectedPhrase.menu = false">New phrase after</button>
+            <button mat-menu-item (click)="addPauseLeft($index); selectedPhrase.menu = false">Pause before</button>
+            <button mat-menu-item (click)="addPauseRight($index); selectedPhrase.menu = false">Pause after</button>
         </mat-menu>
 
         <mat-menu #pauseMenu>
-          <button mat-menu-item [matMenuTriggerFor]="insertMenu" (click)="selectedPhrase.mode = 'menu'">Insert</button>
-          <button mat-menu-item (click)="duplicatePhrase($index)">Duplicate</button>
-          <button mat-menu-item (click)="deletePhrase($index)">Delete</button>
+          <button mat-menu-item [matMenuTriggerFor]="insertMenu" (click)="selectedPhrase.menu = true">Insert</button>
+          <button mat-menu-item (click)="duplicatePhrase($index); selectedPhrase.menu = false">Duplicate</button>
+          <button mat-menu-item (click)="deletePhrase($index); selectedPhrase.menu = false">Delete</button>
         </mat-menu>
 
       } 
