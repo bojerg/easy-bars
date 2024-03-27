@@ -18,6 +18,8 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 /*
 TODO:
 Playback scroll + hide lyrics far from playback position
+Keep track label containers visible on scroll
+Fix page width being a mile longer than needed
 Add playback position bar
 Flesh out Page control UI and functionality
 Fix dragging to not fixate on cursor position

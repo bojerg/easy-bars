@@ -43,19 +43,21 @@
     </mat-tab>
     <mat-tab label="Playback">
         <div id="playback-toolbar">
-            @for(page of canvas.tracks; track $index) {
-                <div class="playback-select">
-                    <label>{{page.title}}: </label>
-                    <input type="checkbox" (change)="selectPlaybackPage($index)" [checked]="checkPlaybackSelectStatus($index)">
-                </div>
-            }
+            <div id="playback-select-wrapper">
+                @for(page of canvas.tracks; track $index) {
+                    <div class="playback-select">
+                        <label>{{page.title}}: </label>
+                        <input type="checkbox" (change)="selectPlaybackPage($index)" [checked]="checkPlaybackSelectStatus($index)">
+                    </div>
+                }
+            </div>
         </div>
         <div class="playback-container">
         @if(selectedIndex3 !== -1) {
             <div class="selected-div">
                 <h3>{{canvas.tracks[selectedIndex3].title}}</h3>
                 @for(bar of selectedBars3; track $index) {
-                    <div class="playbackBar">
+                    <div class="playback-bar">
                         @for(phrase of bar; track $index) {
                             @if(playback.paused) {
                                 @if(phrase.phrase.isPause) {
@@ -88,7 +90,7 @@
             <div class="selected-div" id="selected-primary">
                 <h3>{{canvas.tracks[selectedIndex1].title}}</h3>
                 @for(bar of selectedBars1; track $index) {
-                    <div class="playbackBar">
+                    <div class="playback-bar">
                         @for(phrase of bar; track $index) {
                             @if(playback.paused) {
                                 @if(phrase.phrase.isPause) {
@@ -121,7 +123,7 @@
             <div class="selected-div">
                 <h3>{{canvas.tracks[selectedIndex2].title}}</h3>
                 @for(bar of selectedBars2; track $index) {
-                    <div class="playbackBar">
+                    <div class="playback-bar">
                         @for(phrase of bar; track $index) {
                             @if(playback.paused) {
                                 @if(phrase.phrase.isPause) {
