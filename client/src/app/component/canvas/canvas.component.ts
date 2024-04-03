@@ -17,7 +17,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 
 /*
 TODO:
-Fix metronome playing forever after mp3 stops
+Test if metronome playing forever after mp3 stops is fixed
 Playback scroll + hide lyrics far from playback position
 Keep track label containers visible on scroll
 Fix page width being a mile longer than needed
@@ -105,6 +105,7 @@ export class CanvasComponent {
       this.bars.push(i);
     }
 
+    this.playbackService.setPlaybackBars(bars);
     this.setAllPageBars();
   }
 

@@ -115,7 +115,7 @@ export class ToolbarComponent {
       this.waveform.load(source);
       let instrumental = new Howl({ src: [source], format: ['mp3']});
       instrumental.on("load", (_: any) => {
-        this.playbackService.instrumental = instrumental;
+        this.playbackService.setInstrumental(instrumental);
         this.canvas.duration = instrumental.duration();
         this.canvas.calculateCanvasBars();
       });

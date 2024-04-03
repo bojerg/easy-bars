@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, take } from 'rxjs';
 import { Playback } from '../model/playback';
 
 @Injectable({
@@ -7,13 +7,13 @@ import { Playback } from '../model/playback';
 })
 export class PlaybackService {
 
+  private metronome = new Howl({src: ['../../../assets/metronome_1.mp3'], sprite: {"metronome": [0, 600, true]}});
+  private instrumental: Howl | undefined;
+  private intervalLenth = 37.5; // 1/16th beat at 100bpm
+  private intervalId: any = null;
+  private bars: number = 28;
   private playbackSource = new BehaviorSubject(new Playback(false, false, false, 0, 0.0, 100));
   playback = this.playbackSource.asObservable();
-
-  metronome = new Howl({src: ['../../../assets/metronome_1.mp3'], sprite: {"metronome": [0, 600, true]}});
-  instrumental: Howl | undefined;
-  intervalLenth = 37.5; // 1/16th beat at 100bpm
-  intervalId: any = null;
 
   play(playback: Playback): void {
     playback.playing = true;
@@ -36,6 +36,14 @@ export class PlaybackService {
     if(playback.metronome) this.metronome.stop();
     if(this.instrumental !== undefined) this.instrumental.stop();
     this.resetInterval(playback);
+  }
+
+  setInstrumental(instrumental: Howl | undefined): void {
+    this.instrumental = instrumental;
+  }
+
+  setPlaybackBars(bars: number): void {
+    this.bars = bars;
   }
 
   setBpm(bpm: number, playback: Playback): void {
@@ -61,7 +69,11 @@ export class PlaybackService {
       playback.beat = 0;
       playback.bar++;
     }
-    this.playbackSource.next(playback);
+    if(playback.bar <= this.bars) {
+      this.playbackSource.next(playback);
+    } else {
+      this.stop(playback);
+    }
   }
 
   private resetInterval(playback: Playback): void {
