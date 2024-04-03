@@ -18,12 +18,10 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 /*
 TODO:
 Test if metronome playing forever after mp3 stops is fixed
-Playback scroll + hide lyrics far from playback position
-Keep track label containers visible on scroll
-Fix page width being a mile longer than needed
+Fix dragging
 Add playback position bar
+Playback scroll + hide lyrics far from playback position
 Flesh out Page control UI and functionality
-Fix dragging to not fixate on cursor position
 */
 
 export interface PlaybackPhrase {
