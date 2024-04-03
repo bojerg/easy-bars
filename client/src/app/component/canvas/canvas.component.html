@@ -34,7 +34,7 @@
                                 <div class="beat"></div>
                             }
                             <div class="float-page-container" cdkDragBoundary=".track-boundary" cdkDrag (cdkDragStarted)="dragStarted($event, page.id)" [cdkDragConstrainPosition]="computeDragRenderPos.bind(this)">
-                                <mat-card class="float-page-card" [ngStyle]="{'width.px': getCardWidth(page.id), 'right.px': bars.length * 64, 'margin-right.px': bars.length * -64}">
+                                <mat-card class="float-page-card" [ngStyle]="{'width.px': getCardWidth(page.id), 'margin-right.px': getCardWidth(page.id) * -1}">
                                     <span class="float-page-header"></span>
                                     <mat-card-content style="text-align: center;">{{ page.getPreview() }}</mat-card-content>
                                     <mat-card-actions class="float-page-actions">

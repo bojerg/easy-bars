@@ -17,7 +17,6 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 
 /*
 TODO:
-Test if metronome playing forever after mp3 stops is fixed
 Fix dragging
 Add playback position bar
 Playback scroll + hide lyrics far from playback position
@@ -245,7 +244,7 @@ export class CanvasComponent {
     // will render the element every 16 pixels horizontally
     const delta = pos.x - this.dragStart.x;
     let xPos = this.dragStart.x + Math.floor(delta / 16) * 16;
-    this.canvas.tracks[this.dragIndex].start = (xPos - 112) / 16;
+    this.canvas.tracks[this.dragIndex].start = (xPos - 114) / 16;
     this.projectService.updateProject(this.canvas);
     this.calculateCanvasBars();
     return {x: xPos, y: this.dragStart.y};
