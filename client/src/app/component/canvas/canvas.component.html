@@ -12,10 +12,10 @@
                 }
             </div>
 
+            <div id="waveform" [ngStyle]="{'width.px': getDurationPx() }"></div>
+            
             <div class="track-grid-container">
                 <div class="track" id="instrumental-track">
-                    <div id="waveform" [ngStyle]="{'width.px': getDurationPx() }"></div>
-                    <div><!-- dummy div for even/odd color scheme --></div>
                     @for (bar of bars; track $index) {
                         <div class="beat mp3-beats" id="first-beat"></div>
                         <div class="beat mp3-beats"></div>
