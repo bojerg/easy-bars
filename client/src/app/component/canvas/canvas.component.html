@@ -1,45 +1,51 @@
 <mat-tab-group id="tab-group" animationDuration="0ms" mat-stretch-tabs="false" mat-align-tabs="start">
     <mat-tab label="Canvas" class="canvas" [ngStyle]="{'margin-right.px': bars.length * -1}">
-        
-
-            <div class="track" id="instrumental-track">
+        <div class="canvas-grid">
+            <div class="label-grid-container">
                 <div class="track-label-container">
                     <span class="track-label">{{ mp3Name }}</span>
                 </div>
-                @for (bar of bars; track $index) {
-                    <div class="beat mp3-beats" id="first-beat"></div>
-                    <div class="beat mp3-beats"></div>
-                    <div class="beat mp3-beats"></div>
-                    <div class="beat mp3-beats"></div>
-                }
-            </div>
-            <div id="waveform" [ngStyle]="{'width.px': getDurationPx() }"></div>
-        
-            @for(page of canvas.tracks; track page.id) {
-                <div class="track">
+                @for(page of canvas.tracks; track page.id) {
                     <div class="track-label-container" (click)="openPage(page)">
                         <span class="track-label">{{ page.title }}</span>
                     </div>
-                    <div class="track-boundary">
-                        <div class="float-page-container" cdkDragBoundary=".track-boundary" cdkDrag (cdkDragStarted)="dragStarted($event, page.id)" [cdkDragConstrainPosition]="computeDragRenderPos.bind(this)">
-                            <mat-card class="float-page-card" [ngStyle]="{'width.px': getCardWidth(page.id) }">
-                                <span class="float-page-header"></span>
-                                <mat-card-content style="text-align: center;">{{ page.getPreview() }}</mat-card-content>
-                                <mat-card-actions class="float-page-actions">
-                                    <button class="float-page-edit-btn" (click)="openPage(page)"><mat-icon inline="true" >create</mat-icon></button>
-                                </mat-card-actions>
-                            </mat-card>
-                        </div>
-                        @for (bar of bars; track $index) {
-                            <div class="beat" id="first-beat" [ngStyle]="{'right.px': getCardWidth(page.id)}"></div>
-                            <div class="beat" [ngStyle]="{'right.px': getCardWidth(page.id)}"></div>
-                            <div class="beat" [ngStyle]="{'right.px': getCardWidth(page.id)}"></div>
-                            <div class="beat" [ngStyle]="{'right.px': getCardWidth(page.id)}"></div>
-                        }
-                    </div>
+                }
+            </div>
+
+            <div class="track-grid-container">
+                <div class="track" id="instrumental-track">
+                    <div id="waveform" [ngStyle]="{'width.px': getDurationPx() }"></div>
+                    @for (bar of bars; track $index) {
+                        <div class="beat mp3-beats" id="first-beat"></div>
+                        <div class="beat mp3-beats"></div>
+                        <div class="beat mp3-beats"></div>
+                        <div class="beat mp3-beats"></div>
+                    }
                 </div>
-            }
-               
+
+                @for(page of canvas.tracks; track page.id) {
+                    <div class="track">
+                        <div class="track-boundary">
+                            <div class="float-page-container" cdkDragBoundary=".track-boundary" cdkDrag (cdkDragStarted)="dragStarted($event, page.id)" [cdkDragConstrainPosition]="computeDragRenderPos.bind(this)">
+                                <mat-card class="float-page-card" [ngStyle]="{'width.px': getCardWidth(page.id) }">
+                                    <span class="float-page-header"></span>
+                                    <mat-card-content style="text-align: center;">{{ page.getPreview() }}</mat-card-content>
+                                    <mat-card-actions class="float-page-actions">
+                                        <button class="float-page-edit-btn" (click)="openPage(page)"><mat-icon inline="true" >create</mat-icon></button>
+                                    </mat-card-actions>
+                                </mat-card>
+                            </div>
+                            @for (bar of bars; track $index) {
+                                <div class="beat" id="first-beat" [ngStyle]="{'right.px': getCardWidth(page.id)}"></div>
+                                <div class="beat" [ngStyle]="{'right.px': getCardWidth(page.id)}"></div>
+                                <div class="beat" [ngStyle]="{'right.px': getCardWidth(page.id)}"></div>
+                                <div class="beat" [ngStyle]="{'right.px': getCardWidth(page.id)}"></div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
     </mat-tab>
     <mat-tab label="Playback">
         <div id="playback-toolbar">

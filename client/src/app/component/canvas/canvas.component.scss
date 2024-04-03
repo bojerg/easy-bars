@@ -12,21 +12,48 @@
     height: 100%;
 }
 
+.canvas-grid {
+    margin-top: 4px;
+    display: grid;
+    grid-template-columns: [labels] 112px [tracks] auto [end];
+}
+
+.label-grid-container {
+    grid-column-start: labels;
+    position: absolute;
+    z-index: 3;
+}
+
+.track-grid-container {
+    grid-column-start: tracks;
+}
+
 .track {
     height: 8em;
     display: flex;
     position: relative;
     flex-wrap: nowrap;
     padding-bottom: 2px;
-    bottom: 7em;
 }
 
 .track-label-container {
-    position: sticky;
-    padding: 2rem 1rem;
+    display: table;
+    padding: 0 16px;
     min-width: 80px;
     max-width: 80px;
-    background-color: rgba(104, 84, 79, 0.575);
+    height: 8em;
+    background-color: #584744;
+    border-bottom: 2px solid black;
+}
+
+.track-label-container:last-of-type {
+    border-bottom: none;
+}
+
+.track-label {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
 }
 
 .beat {
@@ -61,11 +88,6 @@
     border-left: 2px solid black;
     min-width: 14px;
     max-width: 14px;
-}
-
-#instrumental-track {
-    margin-top: 4px;
-    bottom: 0;
 }
 
 .float-page-container {
