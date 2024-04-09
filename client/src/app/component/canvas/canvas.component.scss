@@ -10,30 +10,40 @@
 .canvas {
     position: relative;
     height: 100%;
+    width: 100%;
 }
 
 .canvas-grid {
+    position: absolute;
+    height: calc(100% - 4px);
     margin-top: 4px;
     display: grid;
     grid-template-columns: [labels] 112px [tracks] auto [end];
+    overflow: hidden auto;
 }
 
 .label-grid-container {
     grid-column-start: labels;
-    position: absolute;
     z-index: 3;
+    position: absolute;
 }
 
 .track-grid-container {
     grid-column-start: tracks;
+    position: relative;
+    overflow: auto hidden;
 }
 
 .track {
     height: 8em;
     display: flex;
-    position: relative;
+    position: float;
     flex-wrap: nowrap;
     padding-bottom: 2px;
+}
+
+.track:last-of-type {
+    margin-bottom: 2em;
 }
 
 .track-label-container {
@@ -72,10 +82,10 @@
 
 #waveform {
     z-index: 2;
-    position: relative;
-    left: 114px;
-    bottom: 0.5em;
-    height: 7em;
+    position: absolute;
+    top: -4px;
+    height: 8em;
+    overflow: hidden;
 }
 
 .beat:nth-child(odd) {
@@ -88,38 +98,32 @@
     max-width: 14px;
 }
 
-.float-page-container {
-    display: float;
-    position: relative;
+.abs-page-container {
+    position: absolute;
     z-index: 2;
 }
 
-.float-page-card {
+.page-card {
     z-index: 2;
     border-radius: 4px;
     margin: 0.5em 0;
     height: 7em;
 }
 
-.float-page-header {
+.page-card-header {
     border-radius: 4px 4px 0 0;
     background-color: rgba(255, 255, 255, 0.27);
     height: 1em;
     margin-bottom: 0.5em;
 }
 
-.float-page-actions {
+.page-card-actions {
     display: flex;
     justify-content: center;
 }
 
-.float-page-edit-btn > mat-icon {
+.page-card-edit-btn > mat-icon {
     font-size: 1rem;
-}
-
-.track-boundary {
-    display: flex;
-    flex-wrap: nowrap;
 }
 
 /* PLAYBACK */

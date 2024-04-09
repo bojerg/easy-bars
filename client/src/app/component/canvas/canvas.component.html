@@ -11,10 +11,10 @@
                     </div>
                 }
             </div>
-
-            <div id="waveform" [ngStyle]="{'width.px': getDurationPx() }"></div>
             
-            <div class="track-grid-container">
+            <div class="track-grid-container" [ngStyle]="{'height.px': ((canvas.tracks.length + 1) * 114) + 24}">
+                <div id="waveform" [ngStyle]="{'width.px': getDurationPx() }"></div>
+
                 <div class="track" id="instrumental-track">
                     @for (bar of bars; track $index) {
                         <div class="beat mp3-beats" id="first-beat"></div>
@@ -24,27 +24,28 @@
                     }
                 </div>
 
-                @for(page of canvas.tracks; track page.id) {
-                    <div class="track">
-                        <div class="track-boundary">
-                            @for (bar of bars; track $index) {
-                                <div class="beat" id="first-beat"></div>
-                                <div class="beat"></div>
-                                <div class="beat"></div>
-                                <div class="beat"></div>
-                            }
-                            <div class="float-page-container" cdkDragBoundary=".track-boundary" cdkDrag (cdkDragStarted)="dragStarted($event, page.id)" [cdkDragConstrainPosition]="computeDragRenderPos.bind(this)">
-                                <mat-card class="float-page-card" [ngStyle]="{'width.px': getCardWidth(page.id), 'margin-right.px': getCardWidth(page.id) * -1}">
-                                    <span class="float-page-header"></span>
-                                    <mat-card-content style="text-align: center;">{{ page.getPreview() }}</mat-card-content>
-                                    <mat-card-actions class="float-page-actions">
-                                        <button class="float-page-edit-btn" (click)="openPage(page)"><mat-icon inline="true" >create</mat-icon></button>
-                                    </mat-card-actions>
-                                </mat-card>
-                            </div>
-                        </div>
+                @for(page of canvas.tracks; track $index) {
+                    <div class="track" [ngStyle]="{'top.px': 118 + 114 * $index}">
+                        @for (bar of bars; track $index) {
+                            <div class="beat" id="first-beat"></div>
+                            <div class="beat"></div>
+                            <div class="beat"></div>
+                            <div class="beat"></div>
+                        }
                     </div>
                 }
+
+                @for(page of canvas.tracks; track $index) {
+                    <div class="abs-page-container" cdkDrag (cdkDragStarted)="dragStarted($event, page.id)" [cdkDragConstrainPosition]="computeDragRenderPos.bind(this)" [ngStyle]="{'top.px': 116 + 114 * $index}">
+                        <mat-card class="page-card" [ngStyle]="{'width.px': getCardWidth(page.id)}">
+                            <span class="page-card-header"></span>
+                            <mat-card-content style="text-align: center;">{{ page.getPreview() }}</mat-card-content>
+                            <mat-card-actions class="page-card-actions">
+                                <button class="page-card-edit-btn" (click)="openPage(page)"><mat-icon inline="true">create</mat-icon></button>
+                            </mat-card-actions>
+                        </mat-card>
+                    </div>
+                }  
             </div>
         </div>
     </mat-tab>
