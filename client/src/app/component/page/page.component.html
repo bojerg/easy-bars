@@ -18,6 +18,7 @@
       <button (click)="splitLyricsByWord()">Split by Word</button>
       <button (click)="deleteAll()">Delete All</button>
       <button (click)="showLength = !showLength" id="hide-show-len-btn">{{ showLength ? "Show length" : "Hide length" }}</button>
+      <button (click)="copyLyricsToClipboard()">Copy to clipboard</button>
     </div>
     <button id="page-close" mat-raised-button color="primary" (click)="dialogRef.close()"><mat-icon>close</mat-icon></button>
   </mat-toolbar> 

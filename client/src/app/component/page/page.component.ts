@@ -4,14 +4,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { Clipboard } from '@angular/cdk/clipboard';
 import { Page } from '../../model/page';
 import { Phrase } from '../../model/phrase';
 import { sampleLyrics } from '../../model/testBars';
 
 /*
-TODO
+TODO:
 Rework time controls
-Add "copy as plaintext"
 Remove testBars.ts and references
 */
 
@@ -58,6 +58,7 @@ export class PageComponent {
   constructor(
     public dialog: MatDialog,
     public dialogRef: MatDialogRef<PageComponent>,
+    private clipboard: Clipboard,
     @Inject(MAT_DIALOG_DATA) public page: Page,
   ) { 
     this.onResize();
@@ -349,6 +350,21 @@ export class PageComponent {
       this.updateUndoStack(false);
       this.page.lyrics[index].duration -= this.selectedPhrase.stepSize;
     }
+  }
+
+  copyLyricsToClipboard(): void {
+    let toCopy = "";
+    let beatCount = 0;
+    this.page.lyrics.forEach(phrase => {
+      beatCount += phrase.duration;
+      if(beatCount < 4) {
+        if(!phrase.isPause && !phrase.isEmpty()) toCopy += phrase.content;
+      } else {
+        beatCount = beatCount % 4;
+        if(!phrase.isPause && !phrase.isEmpty()) toCopy += phrase.content + "\n";
+      }
+    });
+    this.clipboard.copy(toCopy);
   }
 
   public getBeats(index: number): string {

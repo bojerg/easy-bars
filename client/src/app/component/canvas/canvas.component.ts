@@ -19,6 +19,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 TODO:
 Add playback position bar
 Playback scroll + hide lyrics far from playback position
+Playback select menu sizing and playback styling
 Flesh out Page control UI and functionality
 */
 

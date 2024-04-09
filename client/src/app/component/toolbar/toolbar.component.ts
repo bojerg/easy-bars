@@ -13,7 +13,11 @@ import WaveSurfer from 'wavesurfer.js';
 import { Playback } from '../../model/playback';
 import { PlaybackService } from '../../service/playback.service';
 
-//TODO: Saving and loading projects
+/* 
+TODO:
+Saving and loading projects
+Investigate app stuff
+*/
 
 @Component({
     selector: 'app-toolbar',
