@@ -46,6 +46,10 @@ export class PlaybackService {
     this.bars = bars;
   }
 
+  setPlayback(playback: Playback): void {
+    this.playbackSource.next(playback);
+  }
+
   setBpm(bpm: number, playback: Playback): void {
     playback.bpm = bpm;
     playback.playing = false;

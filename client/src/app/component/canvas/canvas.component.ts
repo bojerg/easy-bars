@@ -14,11 +14,9 @@ import { Playback } from '../../model/playback';
 import { Phrase } from '../../model/phrase';
 import { PlaybackService } from '../../service/playback.service';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { transform } from 'typescript';
 
 /*
 TODO:
-Add playback position bar
 Playback scroll + hide lyrics far from playback position
 Playback select menu sizing and playback styling
 Flesh out Page control UI and functionality
@@ -71,6 +69,8 @@ export class CanvasComponent {
 
   dragStart: any;
   dragIndex: number = -1;
+
+  playbackBarDragStart: any;
 
   selectedIndex1: number = -1;
   selectedIndex2: number = -1;
@@ -249,12 +249,27 @@ export class CanvasComponent {
       const distance = (this.bars.length * 64).toString();
       const duration = (((this.bars.length * 4) / this.playback.bpm) * 60000).toString();
       options = {distance: distance, duration: duration}
-    } /*else {
-      if(!this.playback.paused) {
-        options = {distance: (this.bars.length * -64).toString()};
-      }
-    } */
+    } else if(this.playback.paused) {
+      options = {distance: ((this.playback.bar * 4) + this.playback.beat) * 16};
+    } // else = stop -- default = 0 
     return {value: state, params: options};
+  }
+
+  playbackDragStarted(event: CdkDragStart): void {
+    this.playbackBarDragStart = event.source.element.nativeElement.getBoundingClientRect();
+    this.playbackService.pause(this.playback);
+  }
+
+  computePlaybackDragRenderPos(pos: any, _: any): {x: number, y: number} {
+    const delta = pos.x - this.playbackBarDragStart.x;
+    let xPos = this.playbackBarDragStart.x + Math.floor(delta / 16) * 16;
+    xPos = xPos > 112 ? xPos : 112;
+    const xMax = (this.bars.length * 64) + 112;
+    xPos = xPos < xMax ? xPos : xMax;
+    this.playback.bar = Math.floor((xPos - 112) / 64);
+    this.playback.beat = ((xPos - 112) % 64) / 16;
+    this.playbackService.setPlayback(this.playback);
+    return {x: xPos, y: this.playbackBarDragStart.y};
   }
 
   // https://stackoverflow.com/questions/70385721/angular-material-cdk-drag-and-drop-snap-to-grid-internal-element-cdkdragconstrai
@@ -270,7 +285,6 @@ export class CanvasComponent {
     xPos = xPos > 112 ? xPos : 112;
     const xMax = (this.bars.length * 64) - this.getCardWidth(this.dragIndex) + 112;
     xPos = xPos < xMax ? xPos : xMax;
-    console.log(xPos)
     this.canvas.tracks[this.dragIndex].start = (xPos - 114) / 16;
     this.projectService.updateProject(this.canvas);
     this.calculateCanvasBars();
