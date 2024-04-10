@@ -14,6 +14,7 @@ import { Playback } from '../../model/playback';
 import { Phrase } from '../../model/phrase';
 import { PlaybackService } from '../../service/playback.service';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { transform } from 'typescript';
 
 /*
 TODO:
@@ -43,6 +44,13 @@ export interface PlaybackPhrase {
       transition('* => reset', [animate('1ms')]),
       transition('* => said', [animate('1ms')]),
       transition('* => say', [animate('1ms {{delay}}')])
+    ]),
+
+    trigger('playStop', [
+      state('play', style({transform: 'translateX( {{distance}}px)'}), {params: {distance: '0'}}),
+      state('stop', style({transform: 'translateX( {{distance}}px)'}), {params: {distance: '0'}}),
+      transition('* => play', [animate('{{duration}}ms')]),
+      transition('* => stop', [animate('1ms')])
     ])
   ]
 })
@@ -232,6 +240,21 @@ export class CanvasComponent {
 
   checkPlaybackSelectStatus(index: number): boolean {
     return this.selectedIndex1 === index || this.selectedIndex2 === index || this.selectedIndex3 === index;
+  }
+
+  getPlayStopAnimationObj(): {value: string, params: {}} {
+    const state = this.playback.playing ? 'play' : 'stop';
+    let options = {};
+    if(state === 'play') {
+      const distance = (this.bars.length * 64).toString();
+      const duration = (((this.bars.length * 4) / this.playback.bpm) * 60000).toString();
+      options = {distance: distance, duration: duration}
+    } /*else {
+      if(!this.playback.paused) {
+        options = {distance: (this.bars.length * -64).toString()};
+      }
+    } */
+    return {value: state, params: options};
   }
 
   // https://stackoverflow.com/questions/70385721/angular-material-cdk-drag-and-drop-snap-to-grid-internal-element-cdkdragconstrai

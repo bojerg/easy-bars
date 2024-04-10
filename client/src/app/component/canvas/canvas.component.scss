@@ -88,6 +88,14 @@
     overflow: hidden;
 }
 
+#playback-bar {
+    position: absolute;
+    width: 4px;
+    border-radius: 1px;
+    z-index: 3;
+    background-color: pink;
+}
+
 .beat:nth-child(odd) {
     background-color: rgb(69, 63, 71, 0.5);
 }
@@ -100,11 +108,11 @@
 
 .abs-page-container {
     position: absolute;
-    z-index: 2;
+    z-index: 4;
 }
 
 .page-card {
-    z-index: 2;
+    z-index: 4;
     border-radius: 4px;
     margin: 0.5em 0;
     height: 7em;

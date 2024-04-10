@@ -14,6 +14,7 @@
             
             <div class="track-grid-container" [ngStyle]="{'height.px': ((canvas.tracks.length + 1) * 114) + 24}">
                 <div id="waveform" [ngStyle]="{'width.px': getDurationPx() }"></div>
+                <div id="playback-bar" [@playStop]="getPlayStopAnimationObj()" [ngStyle]="{'height.em': ((canvas.tracks.length + 1) * 8.0625)}"></div> <!-- cdkDrag (cdkDragStarted)="playbackDragStarted($event)" [cdkDragConstrainPosition]="computePlaybackDragRenderPos.bind(this)" -->
 
                 <div class="track" id="instrumental-track">
                     @for (bar of bars; track $index) {
