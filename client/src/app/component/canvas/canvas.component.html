@@ -1,5 +1,6 @@
-<mat-tab-group id="tab-group" animationDuration="0ms" mat-stretch-tabs="false" mat-align-tabs="start">
-    <mat-tab label="Canvas" class="canvas">
+<mat-tab-group id="tab-group" animationDuration="0ms" mat-stretch-tabs="false" mat-align-tabs="start" (selectedTabChange)="tabChange()">
+    <mat-tab label="Canvas">
+    <ng-template class="canvas" matTabContent>
         <div class="canvas-grid">
             <div class="label-grid-container">
                 <div class="track-label-container">
@@ -49,8 +50,10 @@
                 }  
             </div>
         </div>
+    </ng-template>
     </mat-tab>
     <mat-tab label="Playback">
+        <ng-template matTabContent>
         <div id="playback-toolbar">
             <div id="playback-select-wrapper">
                 @for(page of canvas.tracks; track $index) {
@@ -162,6 +165,7 @@
             </div>
         }
         </div>
+    </ng-template>
     </mat-tab>
   </mat-tab-group>
   
