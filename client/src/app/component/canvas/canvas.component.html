@@ -101,7 +101,9 @@
         @if(selectedIndex1 !== -1) {
             <div class="selected-div" id="selected-primary">
                 <h3>{{canvas.tracks[selectedIndex1].title}}</h3>
-                @for(bar of selectedBars1; track $index) {
+                @for(bar of playbackService.selectedBars1; track $index) {
+
+                    <!-- 
                     <div class="playback-bar">
                         @for(phrase of bar; track $index) {
                             @if(playback.paused) {
@@ -125,6 +127,7 @@
                             }
                         }
                     </div>
+                    -->
                 }
                 @empty {
                     <p>The selected page has no lyrics.</p>

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, take } from 'rxjs';
 import { Playback } from '../model/playback';
+import { PlaybackPhrase } from '../component/canvas/canvas.component';
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +13,17 @@ export class PlaybackService {
   private intervalLenth = 37.5; // 1/16th beat at 100bpm
   private intervalId: any = null;
   private bars: number = 28;
+
   private playbackSource = new BehaviorSubject(new Playback(false, false, false, 0, 0.0, 100));
   playback = this.playbackSource.asObservable();
+
+  private barsQueue1: PlaybackPhrase[][] = [];
+  private barsQueue2: PlaybackPhrase[][] = [];
+  private barsQueue3: PlaybackPhrase[][] = [];
+
+  selectedBars1: PlaybackPhrase[][] = [];
+  selectedBars2: PlaybackPhrase[][] = [];
+  selectedBars3: PlaybackPhrase[][] = [];
 
   play(playback: Playback): void {
     playback.playing = true;
@@ -65,6 +75,14 @@ export class PlaybackService {
   setMetronome(setting: boolean, playback: Playback): void {
     playback.metronome = setting;
     this.playbackSource.next(playback);
+  }
+
+  private generateBarsQueues(): void {
+
+  }
+
+  private iterateBarsQueues(): void {
+
   }
 
   private iterateBeats(playback: Playback): void {

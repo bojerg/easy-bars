@@ -40,9 +40,13 @@ export interface PlaybackPhrase {
       state('reset', style({color: 'whitesmoke'})),
       state('say', style({color: 'yellow'})),
       state('said', style({color: 'yellow'})),
+      state('hiding', style({opacity: '0'})),
+      state('showing', style({opacity: '1'})),
       transition('* => reset', [animate('1ms')]),
       transition('* => said', [animate('1ms')]),
-      transition('* => say', [animate('1ms {{delay}}')])
+      transition('* => say', [animate('1ms {{delay}}')]),
+      transition('* => hiding', [animate('{{time}} {{delay}}')]),
+      transition('* => showing', [animate('{{time}} {{delay}}')])
     ]),
 
     trigger('playStop', [
@@ -76,11 +80,28 @@ export class CanvasComponent {
   selectedIndex1: number = -1;
   selectedIndex2: number = -1;
   selectedIndex3: number = -1;
-  selectedBars1: PlaybackPhrase[][] = [];
-  selectedBars2: PlaybackPhrase[][] = [];
-  selectedBars3: PlaybackPhrase[][] = [];
 
   constructor(private dialog: MatDialog, private projectService: ProjectService, private playbackService: PlaybackService) {}
+
+  saySaidController(phrase: PlaybackPhrase): {value: string, params: {}, display: boolean} {
+    let value = this.playbackTrigger;
+    let display = true;
+    let params = {};
+    
+    if(phrase.beat > this.playback.beat + 3) {
+      value = "hiding";
+      params = {delay: phrase.delay, time: 60000 / this.playback.bpm * 4};
+    }
+    else if(phrase.beat < this.playback.beat - 7) {
+      value = "showing";
+      params = {delay: phrase.delay, time: 60000 / this.playback.bpm * 4};
+    }
+    else {
+      params = {delay: phrase.delay};
+    } 
+
+    return {value: value, params: params, display: display};
+  }
 
   ngOnInit() {
     this.playbackSub = this.playbackService.playback.subscribe(playback => {
@@ -145,15 +166,15 @@ export class CanvasComponent {
       if(index === -1) {
         switch(selection) {
           case 1: {
-            this.selectedBars1 = [];
+            this.playbackService.selectedBars1 = [];
             break;
           }
           case 2: {
-            this.selectedBars2 = [];
+            this.playbackService.selectedBars2 = [];
             break;
           }
           case 3: {
-            this.selectedBars3 = [];
+            this.playbackService.selectedBars3 = [];
           }
         }
       } else {
@@ -187,15 +208,15 @@ export class CanvasComponent {
   
         switch(selection) {
           case 1: {
-            this.selectedBars1 = bars;
+            this.playbackService.selectedBars1 = bars
             break;
           }
           case 2: {
-            this.selectedBars2 = bars;
+            this.playbackService.selectedBars2 = bars;
             break;
           }
           case 3: {
-            this.selectedBars3 = bars;
+            this.playbackService.selectedBars3 = bars;
           }
         }
       }
