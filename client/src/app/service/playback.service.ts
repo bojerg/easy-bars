@@ -17,18 +17,15 @@ export class PlaybackService {
   private playbackSource = new BehaviorSubject(new Playback(false, false, false, 0, 0.0, 100));
   playback = this.playbackSource.asObservable();
 
-  private barsQueue1: PlaybackPhrase[][] = [];
-  private barsQueue2: PlaybackPhrase[][] = [];
-  private barsQueue3: PlaybackPhrase[][] = [];
-
-  selectedBars1: PlaybackPhrase[][] = [];
-  selectedBars2: PlaybackPhrase[][] = [];
-  selectedBars3: PlaybackPhrase[][] = [];
+  private selectedBars1: PlaybackPhrase[][] = [];
+  private selectedBars2: PlaybackPhrase[][] = [];
+  private selectedBars3: PlaybackPhrase[][] = [];
 
   play(playback: Playback): void {
     playback.playing = true;
     if(playback.metronome) this.metronome.play("metronome");
     if(this.instrumental !== undefined) this.instrumental.play();
+    this.generateBarsQueues(playback);
     this.intervalId = setInterval(() => this.iterateBeats(playback), this.intervalLenth);
   }
 
@@ -77,12 +74,63 @@ export class PlaybackService {
     this.playbackSource.next(playback);
   }
 
-  private generateBarsQueues(): void {
-
+  setSelectedBars(selectedBars: PlaybackPhrase[][], index: number, playback: Playback) {
+    if(index > 0 && index < 4) {
+      switch(index) {
+        case 1: {
+          this.selectedBars1 = selectedBars;
+          break;
+        }
+        case 2: {
+          this.selectedBars2 = selectedBars;
+          break;
+        }
+        case 3: {
+          this.selectedBars3 = selectedBars;
+          break;
+        }
+      }
+      this.generateBarsQueues(playback);
+    }
   }
 
-  private iterateBarsQueues(): void {
+  private generateBarsQueues(playback: Playback): void {
+    playback.barsQueue1 = [];
+    playback.barsQueue2 = [];
+    playback.barsQueue3 = [];
 
+    let searchBarNum = 0;
+    if(this.selectedBars1[0] !== undefined) {
+      while(searchBarNum <= playback.bar + 3) {
+        //selected1 generate
+        if(this.selectedBars1[searchBarNum][0].beat && Math.floor(this.selectedBars1[searchBarNum][0].beat / 4) > playback.bar - 4) {
+          playback.barsQueue1.push(this.selectedBars1[searchBarNum]);
+        } 
+        searchBarNum++;
+      }
+    }
+
+    searchBarNum = 0;
+    if(this.selectedBars2[0] !== undefined) {
+      while(searchBarNum <= playback.bar + 3) {
+        //selected2 generate
+        if(this.selectedBars2[searchBarNum][0].beat && Math.floor(this.selectedBars2[searchBarNum][0].beat / 4) > playback.bar - 4) {
+          playback.barsQueue2.push(this.selectedBars2[searchBarNum]);
+        } 
+        searchBarNum++;
+      }
+    }
+
+    searchBarNum = 0;
+    if(this.selectedBars3[0] !== undefined) {
+      while(searchBarNum <= playback.bar + 3) {
+        //selected3 generate
+        if(this.selectedBars3[searchBarNum][0].beat && Math.floor(this.selectedBars3[searchBarNum][0].beat / 4) > playback.bar - 4) {
+          playback.barsQueue3.push(this.selectedBars3[searchBarNum]);
+        } 
+        searchBarNum++;
+      }
+    }
   }
 
   private iterateBeats(playback: Playback): void {
@@ -90,6 +138,7 @@ export class PlaybackService {
     if(playback.beat >= 4) {
       playback.beat = 0;
       playback.bar++;
+      this.generateBarsQueues(playback);
     }
     if(playback.bar <= this.bars) {
       this.playbackSource.next(playback);

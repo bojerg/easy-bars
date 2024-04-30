@@ -1,3 +1,5 @@
+import { PlaybackPhrase } from "../component/canvas/canvas.component";
+
 export class Playback {
     public playing: boolean;
     public paused: boolean;
@@ -5,6 +7,9 @@ export class Playback {
     public bar: number;
     public beat: number;
     public bpm: number;
+    public barsQueue1: PlaybackPhrase[][];
+    public barsQueue2: PlaybackPhrase[][];
+    public barsQueue3: PlaybackPhrase[][];
 
     constructor(playing: boolean, paused: boolean, metronome: boolean, bar: number, beat: number, bpm: number) {
         this.playing = playing;
@@ -13,6 +18,10 @@ export class Playback {
         this.bar = bar;
         this.beat = beat;
         this.bpm = bpm;
+
+        this.barsQueue1 = [];
+        this.barsQueue2 = [];
+        this.barsQueue3 = [];
     }
 
 }

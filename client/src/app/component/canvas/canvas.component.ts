@@ -164,19 +164,7 @@ export class CanvasComponent {
   setPageBars(index: number, selection: number) {
     if(selection > 0 && selection < 4) {
       if(index === -1) {
-        switch(selection) {
-          case 1: {
-            this.playbackService.selectedBars1 = [];
-            break;
-          }
-          case 2: {
-            this.playbackService.selectedBars2 = [];
-            break;
-          }
-          case 3: {
-            this.playbackService.selectedBars3 = [];
-          }
-        }
+        this.playbackService.setSelectedBars([], selection, this.playback);
       } else {
         let bars: PlaybackPhrase[][] = [];
         let beatCount = this.canvas.tracks[index].start;
@@ -206,19 +194,7 @@ export class CanvasComponent {
           }
         });
   
-        switch(selection) {
-          case 1: {
-            this.playbackService.selectedBars1 = bars
-            break;
-          }
-          case 2: {
-            this.playbackService.selectedBars2 = bars;
-            break;
-          }
-          case 3: {
-            this.playbackService.selectedBars3 = bars;
-          }
-        }
+        this.playbackService.setSelectedBars(bars, selection, this.playback);
       }
     }
   }

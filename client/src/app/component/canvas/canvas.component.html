@@ -65,6 +65,7 @@
             </div>
         </div>
         <div class="playback-container">
+            <!--
         @if(selectedIndex3 !== -1) {
             <div class="selected-div">
                 <h3>{{canvas.tracks[selectedIndex3].title}}</h3>
@@ -97,13 +98,11 @@
                     <p>The selected page has no lyrics.</p>
                 }
             </div>
-        }
+        } -->
         @if(selectedIndex1 !== -1) {
             <div class="selected-div" id="selected-primary">
                 <h3>{{canvas.tracks[selectedIndex1].title}}</h3>
-                @for(bar of playbackService.selectedBars1; track $index) {
-
-                    <!-- 
+                @for(bar of playback.barsQueue1; track $index) {
                     <div class="playback-bar">
                         @for(phrase of bar; track $index) {
                             @if(playback.paused) {
@@ -127,13 +126,13 @@
                             }
                         }
                     </div>
-                    -->
                 }
                 @empty {
                     <p>The selected page has no lyrics.</p>
                 }
             </div>
         }
+        <!--
         @if(selectedIndex2 !== -1) {
             <div class="selected-div">
                 <h3>{{canvas.tracks[selectedIndex2].title}}</h3>
@@ -166,7 +165,7 @@
                     <p>The selected page has no lyrics.</p>
                 }
             </div>
-        }
+        } -->
         </div>
     </ng-template>
     </mat-tab>
