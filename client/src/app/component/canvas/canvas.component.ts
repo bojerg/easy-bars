@@ -40,13 +40,9 @@ export interface PlaybackPhrase {
       state('reset', style({color: 'whitesmoke'})),
       state('say', style({color: 'yellow'})),
       state('said', style({color: 'yellow'})),
-      state('hiding', style({opacity: '0'})),
-      state('showing', style({opacity: '1'})),
       transition('* => reset', [animate('1ms')]),
       transition('* => said', [animate('1ms')]),
-      transition('* => say', [animate('1ms {{delay}}')]),
-      transition('* => hiding', [animate('{{time}} {{delay}}')]),
-      transition('* => showing', [animate('{{time}} {{delay}}')])
+      transition('* => say', [animate('1ms {{delay}}')])
     ]),
 
     trigger('playStop', [
@@ -76,6 +72,10 @@ export class CanvasComponent {
   dragIndex: number = -1;
 
   playbackBarDragStart: any;
+
+  selectedBars1: PlaybackPhrase[][] = [];
+  selectedBars2: PlaybackPhrase[][] = [];
+  selectedBars3: PlaybackPhrase[][] = [];
 
   selectedIndex1: number = -1;
   selectedIndex2: number = -1;
@@ -143,10 +143,10 @@ export class CanvasComponent {
 
   setPageBars(index: number, selection: number) {
     if(selection > 0 && selection < 4) {
-      if(index === -1) {
-        this.playbackService.setSelectedBars([], selection, this.playback);
-      } else {
-        let bars: PlaybackPhrase[][] = [];
+
+      let bars: PlaybackPhrase[][] = [];
+
+      if(index !== -1) {
         let beatCount = this.canvas.tracks[index].start;
         let barCount = 0;
     
@@ -173,9 +173,23 @@ export class CanvasComponent {
             barCount++;
           }
         });
-  
-        this.playbackService.setSelectedBars(bars, selection, this.playback);
       }
+
+      switch(selection) {
+        case 1: {
+          this.selectedBars1 = bars;
+          break;
+        }
+        case 2: {
+          this.selectedBars2 = bars;
+          break;
+        }
+        case 3: {
+          this.selectedBars3 = bars;
+          break;
+        }
+      }
+
     }
   }
 

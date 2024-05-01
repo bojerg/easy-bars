@@ -139,7 +139,9 @@
 
 .playback-bar {
     display: flex;
-    gap: 0.25em;
+    position: relative;
+    height: 2rem;
+    transition: all 1s ease-in-out;
 }
 
 #playback-toolbar {
@@ -172,16 +174,16 @@
 
 .selected-div {
     padding: 0.5em;
+    height: 22rem;
+    overflow: hidden;
 }
 
 .selected-div > h3 {
     text-align: center;
+    background-color: inherit;
+    z-index: 4;
 }
 
-.said {
-    color: yellow;
-}
-
-.unsaid {
-    color: whitesmoke;
+.lyric-container {
+    overflow: hidden;
 }

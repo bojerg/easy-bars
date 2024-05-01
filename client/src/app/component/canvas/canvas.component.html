@@ -65,111 +65,111 @@
             </div>
         </div>
         <div class="playback-container">
-            <!--
-        @if(selectedIndex3 !== -1) {
-            <div class="selected-div">
-                <h3>{{canvas.tracks[selectedIndex3].title}}</h3>
-                @for(bar of selectedBars3; track $index) {
-                    <div class="playback-bar">
-                        @for(phrase of bar; track $index) {
-                            @if(playback.paused) {
-                                @if(phrase.phrase.isPause) {
-                                    @if(phrase.phrase.duration >= 4) {
-                                        <p></p>
+            @if(selectedIndex3 !== -1) {
+                <div class="selected-div">
+                    <h3>{{canvas.tracks[selectedIndex3].title}}</h3>
+                    <div class="lyric-container">
+                    @for(bar of selectedBars3; track $index) {
+                        <div class="playback-bar" [ngStyle]="{'bottom.rem': playback.bar * 2}">
+                            @for(phrase of bar; track $index) {
+                                @if(playback.paused) {
+                                    @if(phrase.phrase.isPause) {
+                                        @if(phrase.phrase.duration >= 4) {
+                                            <p></p>
+                                        }
                                     }
-                                }
-                                @else {
-                                    <p [@saySaidReset]="{value: phrase.beat < playback.beat + (playback.bar * 4) ? 'said' : 'reset'}">{{phrase.phrase.content}} </p>
-                                }
-                            } @else {
-                                @if(phrase.phrase.isPause) {
-                                    @if(phrase.phrase.duration >= 4) {
-                                        <p></p>
+                                    @else {
+                                        <p [@saySaidReset]="{value: phrase.beat < playback.beat + (playback.bar * 4) ? 'said' : 'reset'}">{{phrase.phrase.content}} </p>
                                     }
-                                } 
-                                @else {
-                                    <p [@saySaidReset]="{value: playbackTrigger, params: {delay: phrase.delay}}">{{phrase.phrase.content}} </p>
+                                } @else {
+                                    @if(phrase.phrase.isPause) {
+                                        @if(phrase.phrase.duration >= 4) {
+                                            <p></p>
+                                        }
+                                    } 
+                                    @else {
+                                        <p [@saySaidReset]="{value: playbackTrigger, params: {delay: phrase.delay}}">{{phrase.phrase.content}} </p>
+                                    }  
                                 }
                             }
-                        }
+                        </div>
+                    }
+                    @empty {
+                        <p>The selected page has no lyrics.</p>
+                    }
                     </div>
-                }
-                @empty {
-                    <p>The selected page has no lyrics.</p>
-                }
-            </div>
-        } -->
-        @if(selectedIndex1 !== -1) {
-            <div class="selected-div" id="selected-primary">
-                <h3>{{canvas.tracks[selectedIndex1].title}}</h3>
-                @for(bar of playback.barsQueue1; track $index) {
-                    <div class="playback-bar">
-                        @for(phrase of bar; track $index) {
-
-                            <p [@saySaidReset]="{value: phrase.beat < playback.beat + (playback.bar * 4) ? 'said' : 'reset'}">{{phrase.phrase.content}} </p>
-
-                            <!--
-                            @if(playback.paused) {
-                                @if(phrase.phrase.isPause) {
-                                    @if(phrase.phrase.duration >= 4) {
-                                        <p></p>
+                </div>
+            }
+            @if(selectedIndex1 !== -1) {
+                <div class="selected-div" id="selected-primary">
+                    <h3>{{canvas.tracks[selectedIndex1].title}}</h3>
+                    <div class="lyric-container">
+                    @for(bar of selectedBars1; track $index) {
+                        <div class="playback-bar" [ngStyle]="{'bottom.rem': playback.bar * 2}">
+                            @for(phrase of bar; track $index) {
+                                @if(playback.paused) {
+                                    @if(phrase.phrase.isPause) {
+                                        @if(phrase.phrase.duration >= 4) {
+                                            <p></p>
+                                        }
                                     }
-                                }
-                                @else {
-                                    <p [@saySaidReset]="{value: phrase.beat < playback.beat + (playback.bar * 4) ? 'said' : 'reset'}">{{phrase.phrase.content}} </p>
-                                }
-                            } @else {
-                                @if(phrase.phrase.isPause) {
-                                    @if(phrase.phrase.duration >= 4) {
-                                        <p></p>
+                                    @else {
+                                        <p [@saySaidReset]="{value: phrase.beat < playback.beat + (playback.bar * 4) ? 'said' : 'reset'}">{{phrase.phrase.content}} </p>
                                     }
-                                } 
-                                @else {
-                                    <p [@saySaidReset]="{value: playbackTrigger, params: {delay: phrase.delay}}">{{phrase.phrase.content}} </p>
-                                }  
-                            } -->
-                        }
-                    </div>
-                }
-                @empty {
-                    <p>The selected page has no lyrics.</p>
-                }
-            </div>
-        }
-        <!--
-        @if(selectedIndex2 !== -1) {
-            <div class="selected-div">
-                <h3>{{canvas.tracks[selectedIndex2].title}}</h3>
-                @for(bar of selectedBars2; track $index) {
-                    <div class="playback-bar">
-                        @for(phrase of bar; track $index) {
-                            @if(playback.paused) {
-                                @if(phrase.phrase.isPause) {
-                                    @if(phrase.phrase.duration >= 4) {
-                                        <p></p>
-                                    }
-                                }
-                                @else {
-                                    <p [@saySaidReset]="{value: phrase.beat < playback.beat + (playback.bar * 4) ? 'said' : 'reset'}">{{phrase.phrase.content}} </p>
-                                }
-                            } @else {
-                                @if(phrase.phrase.isPause) {
-                                    @if(phrase.phrase.duration >= 4) {
-                                        <p></p>
-                                    }
-                                } 
-                                @else {
-                                    <p [@saySaidReset]="{value: playbackTrigger, params: {delay: phrase.delay}}">{{phrase.phrase.content}} </p>
+                                } @else {
+                                    @if(phrase.phrase.isPause) {
+                                        @if(phrase.phrase.duration >= 4) {
+                                            <p></p>
+                                        }
+                                    } 
+                                    @else {
+                                        <p [@saySaidReset]="{value: playbackTrigger, params: {delay: phrase.delay}}">{{phrase.phrase.content}} </p>
+                                    }  
                                 }
                             }
-                        }
+                        </div>
+                    }
+                    @empty {
+                        <p>The selected page has no lyrics.</p>
+                    }
                     </div>
-                }
-                @empty {
-                    <p>The selected page has no lyrics.</p>
-                }
-            </div>
-        } -->
+                </div>
+            }
+            @if(selectedIndex2 !== -1) {
+                <div class="selected-div" id="selected-primary">
+                    <h3>{{canvas.tracks[selectedIndex2].title}}</h3>
+                    <div class="lyric-container">
+                    @for(bar of selectedBars2; track $index) {
+                        <div class="playback-bar" [ngStyle]="{'bottom.rem': playback.bar * 2}">
+                            @for(phrase of bar; track $index) {
+                                @if(playback.paused) {
+                                    @if(phrase.phrase.isPause) {
+                                        @if(phrase.phrase.duration >= 4) {
+                                            <p></p>
+                                        }
+                                    }
+                                    @else {
+                                        <p [@saySaidReset]="{value: phrase.beat < playback.beat + (playback.bar * 4) ? 'said' : 'reset'}">{{phrase.phrase.content}} </p>
+                                    }
+                                } @else {
+                                    @if(phrase.phrase.isPause) {
+                                        @if(phrase.phrase.duration >= 4) {
+                                            <p></p>
+                                        }
+                                    } 
+                                    @else {
+                                        <p [@saySaidReset]="{value: playbackTrigger, params: {delay: phrase.delay}}">{{phrase.phrase.content}} </p>
+                                    }  
+                                }
+                            }
+                        </div>
+                    }
+                    @empty {
+                        <p>The selected page has no lyrics.</p>
+                    }
+                    </div>
+                </div>
+            }
         </div>
     </ng-template>
     </mat-tab>
