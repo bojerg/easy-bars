@@ -20,6 +20,9 @@ export class PlaybackService {
   private selectedBars1: PlaybackPhrase[][] = [];
   private selectedBars2: PlaybackPhrase[][] = [];
   private selectedBars3: PlaybackPhrase[][] = [];
+  private barsQueue1TailIndex = 0;
+  private barsQueue2TailIndex = 0;
+  private barsQueue3TailIndex = 0;
 
   play(playback: Playback): void {
     playback.playing = true;
@@ -43,6 +46,7 @@ export class PlaybackService {
     if(playback.metronome) this.metronome.stop();
     if(this.instrumental !== undefined) this.instrumental.stop();
     this.resetInterval(playback);
+    this.generateBarsQueues(playback);
   }
 
   setInstrumental(instrumental: Howl | undefined): void {
@@ -103,11 +107,12 @@ export class PlaybackService {
     if(this.selectedBars1[0] !== undefined) {
       while(searchBarNum <= playback.bar + 3) {
         //selected1 generate
-        if(this.selectedBars1[searchBarNum][0].beat && Math.floor(this.selectedBars1[searchBarNum][0].beat / 4) > playback.bar - 4) {
+        if(this.selectedBars1[searchBarNum][0] && Math.floor(this.selectedBars1[searchBarNum][0].beat / 4) > playback.bar - 4) {
           playback.barsQueue1.push(this.selectedBars1[searchBarNum]);
         } 
         searchBarNum++;
       }
+      this.barsQueue1TailIndex = searchBarNum - 1;
     }
 
     searchBarNum = 0;
@@ -119,6 +124,7 @@ export class PlaybackService {
         } 
         searchBarNum++;
       }
+      this.barsQueue1TailIndex = searchBarNum - 1;
     }
 
     searchBarNum = 0;
@@ -130,15 +136,33 @@ export class PlaybackService {
         } 
         searchBarNum++;
       }
+      this.barsQueue1TailIndex = searchBarNum - 1;
+    }
+  }
+
+  private iterateBarsQueues(playback: Playback) {
+    if(this.selectedBars1[0] !== undefined) {
+      if(this.selectedBars1[++this.barsQueue1TailIndex]) playback.barsQueue1.push(this.selectedBars1[this.barsQueue1TailIndex]);
+      if(playback.barsQueue1.length >= 7) playback.barsQueue1.shift();
+    }
+
+    if(this.selectedBars2[0] !== undefined) {
+      if(this.selectedBars2[++this.barsQueue1TailIndex]) playback.barsQueue2.push(this.selectedBars2[this.barsQueue2TailIndex]);
+      if(playback.barsQueue2.length >= 7) playback.barsQueue2.shift();
+    }
+
+    if(this.selectedBars3[0] !== undefined) {
+      if(this.selectedBars3[++this.barsQueue1TailIndex]) playback.barsQueue3.push(this.selectedBars3[this.barsQueue3TailIndex]);
+      if(playback.barsQueue3.length >= 7) playback.barsQueue3.shift();
     }
   }
 
   private iterateBeats(playback: Playback): void {
     playback.beat += 0.0625;
     if(playback.beat >= 4) {
+      this.iterateBarsQueues(playback);
       playback.beat = 0;
       playback.bar++;
-      this.generateBarsQueues(playback);
     }
     if(playback.bar <= this.bars) {
       this.playbackSource.next(playback);

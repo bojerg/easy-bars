@@ -105,6 +105,10 @@
                 @for(bar of playback.barsQueue1; track $index) {
                     <div class="playback-bar">
                         @for(phrase of bar; track $index) {
+
+                            <p [@saySaidReset]="{value: phrase.beat < playback.beat + (playback.bar * 4) ? 'said' : 'reset'}">{{phrase.phrase.content}} </p>
+
+                            <!--
                             @if(playback.paused) {
                                 @if(phrase.phrase.isPause) {
                                     @if(phrase.phrase.duration >= 4) {
@@ -122,8 +126,8 @@
                                 } 
                                 @else {
                                     <p [@saySaidReset]="{value: playbackTrigger, params: {delay: phrase.delay}}">{{phrase.phrase.content}} </p>
-                                }
-                            }
+                                }  
+                            } -->
                         }
                     </div>
                 }

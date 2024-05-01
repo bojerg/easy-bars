@@ -83,26 +83,6 @@ export class CanvasComponent {
 
   constructor(private dialog: MatDialog, private projectService: ProjectService, private playbackService: PlaybackService) {}
 
-  saySaidController(phrase: PlaybackPhrase): {value: string, params: {}, display: boolean} {
-    let value = this.playbackTrigger;
-    let display = true;
-    let params = {};
-    
-    if(phrase.beat > this.playback.beat + 3) {
-      value = "hiding";
-      params = {delay: phrase.delay, time: 60000 / this.playback.bpm * 4};
-    }
-    else if(phrase.beat < this.playback.beat - 7) {
-      value = "showing";
-      params = {delay: phrase.delay, time: 60000 / this.playback.bpm * 4};
-    }
-    else {
-      params = {delay: phrase.delay};
-    } 
-
-    return {value: value, params: params, display: display};
-  }
-
   ngOnInit() {
     this.playbackSub = this.playbackService.playback.subscribe(playback => {
       this.playback = playback;
