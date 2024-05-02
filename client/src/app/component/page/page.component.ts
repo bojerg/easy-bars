@@ -12,6 +12,7 @@ import { sampleLyrics } from '../../model/testBars';
 /*
 TODO:
 Rework time controls
+Add "play bar" func and style each bar
 Remove testBars.ts and references
 */
 

@@ -17,10 +17,9 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 
 /*
 TODO:
-Playback scroll + hide lyrics far from playback position
-Playback select menu sizing and playback styling
 Add another playback bar control surface
 Flesh out Page control UI and functionality
+Fix page start position not latching/saving
 */
 
 export interface PlaybackPhrase {

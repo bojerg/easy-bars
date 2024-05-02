@@ -69,13 +69,14 @@
                 <div class="selected-div">
                     <h3>{{canvas.tracks[selectedIndex3].title}}</h3>
                     <div class="lyric-container">
+                        <div class="playback-bar" [ngStyle]="{'bottom.rem': playback.bar * 2}"><div class="spacer"></div></div>
                     @for(bar of selectedBars3; track $index) {
                         <div class="playback-bar" [ngStyle]="{'bottom.rem': playback.bar * 2}">
                             @for(phrase of bar; track $index) {
                                 @if(playback.paused) {
                                     @if(phrase.phrase.isPause) {
                                         @if(phrase.phrase.duration >= 4) {
-                                            <p></p>
+                                            <div class="spacer"></div>
                                         }
                                     }
                                     @else {
@@ -84,7 +85,7 @@
                                 } @else {
                                     @if(phrase.phrase.isPause) {
                                         @if(phrase.phrase.duration >= 4) {
-                                            <p></p>
+                                            <div class="spacer"></div>
                                         }
                                     } 
                                     @else {
@@ -104,13 +105,14 @@
                 <div class="selected-div" id="selected-primary">
                     <h3>{{canvas.tracks[selectedIndex1].title}}</h3>
                     <div class="lyric-container">
+                        <div class="playback-bar" [ngStyle]="{'bottom.rem': playback.bar * 2}"><div class="spacer"></div></div>
                     @for(bar of selectedBars1; track $index) {
                         <div class="playback-bar" [ngStyle]="{'bottom.rem': playback.bar * 2}">
                             @for(phrase of bar; track $index) {
                                 @if(playback.paused) {
                                     @if(phrase.phrase.isPause) {
                                         @if(phrase.phrase.duration >= 4) {
-                                            <p></p>
+                                            <div class="spacer"></div>
                                         }
                                     }
                                     @else {
@@ -119,7 +121,7 @@
                                 } @else {
                                     @if(phrase.phrase.isPause) {
                                         @if(phrase.phrase.duration >= 4) {
-                                            <p></p>
+                                            <div class="spacer"></div>
                                         }
                                     } 
                                     @else {
@@ -136,16 +138,17 @@
                 </div>
             }
             @if(selectedIndex2 !== -1) {
-                <div class="selected-div" id="selected-primary">
+                <div class="selected-div">
                     <h3>{{canvas.tracks[selectedIndex2].title}}</h3>
                     <div class="lyric-container">
+                        <div class="playback-bar" [ngStyle]="{'bottom.rem': playback.bar * 2}"><div class="spacer"></div></div>
                     @for(bar of selectedBars2; track $index) {
                         <div class="playback-bar" [ngStyle]="{'bottom.rem': playback.bar * 2}">
                             @for(phrase of bar; track $index) {
                                 @if(playback.paused) {
                                     @if(phrase.phrase.isPause) {
                                         @if(phrase.phrase.duration >= 4) {
-                                            <p></p>
+                                            <div class="spacer"></div>
                                         }
                                     }
                                     @else {
@@ -154,7 +157,7 @@
                                 } @else {
                                     @if(phrase.phrase.isPause) {
                                         @if(phrase.phrase.duration >= 4) {
-                                            <p></p>
+                                            <div class="spacer"></div>
                                         }
                                     } 
                                     @else {

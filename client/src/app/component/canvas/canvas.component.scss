@@ -142,11 +142,17 @@
     position: relative;
     height: 2rem;
     transition: all 1s ease-in-out;
+    max-width: 500px;
+}
+
+.playback-bar > p {
+    margin-right: 0.3em;
 }
 
 #playback-toolbar {
     position: fixed;
-    height: 1.5rem;
+    height: auto;
+    max-width: 75%;
     padding: 8px;
     top: 8.5rem;
     left: 15rem;
@@ -158,9 +164,18 @@
 #playback-select-wrapper {
     display: flex;
     flex-wrap: nowrap;
+    overflow-x: auto;
+}
+
+.playback-select {
+    margin: .5em;
+    display: flex;
+    flex-wrap: nowrap;
+    text-wrap: nowrap;
 }
 
 .playback-container {
+    margin-top: 4rem;
     display: flex;
     flex-wrap: nowrap;
     justify-content: center;
@@ -186,4 +201,8 @@
 
 .lyric-container {
     overflow: hidden;
+}
+
+.spacer {
+    height: 2rem;
 }
