@@ -5,7 +5,7 @@ import { PageComponent } from '../page/page.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
-import { CdkDragStart, DragDropModule } from '@angular/cdk/drag-drop';
+import { CdkDragEnd, CdkDragRelease, CdkDragStart, DragDropModule } from '@angular/cdk/drag-drop';
 import { Canvas } from '../../model/canvas';
 import { ProjectService } from '../../service/project.service';
 import { Subscription } from 'rxjs';
@@ -79,6 +79,11 @@ export class CanvasComponent {
   selectedIndex1: number = -1;
   selectedIndex2: number = -1;
   selectedIndex3: number = -1;
+
+  // list of page indicies which have been dragged while tab is rendered. This is useful
+  // to override css positioning because computeDragRenderPos() does not account for the css.
+  // This is cleared out in tabChange()
+  pagesBeenDraggedIndicies: number[] = [];
 
   constructor(private dialog: MatDialog, private projectService: ProjectService, private playbackService: PlaybackService) {}
 
@@ -267,6 +272,9 @@ export class CanvasComponent {
   dragStarted(event: CdkDragStart, index: number): void {
     this.dragStart = event.source.element.nativeElement.getBoundingClientRect();
     this.dragIndex = index;
+    if(!this.pagesBeenDraggedIndicies.includes(index)) {
+      this.pagesBeenDraggedIndicies.push(index);
+    }
   }
 
   computeDragRenderPos(pos: any, _: any): {x: number, y: number} {
@@ -284,5 +292,6 @@ export class CanvasComponent {
 
   tabChange(): void {
     if(this.playback.playing) this.playbackService.pause(this.playback);
+    this.pagesBeenDraggedIndicies = [];
   }
 }

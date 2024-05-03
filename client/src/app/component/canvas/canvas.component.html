@@ -38,7 +38,7 @@
                 }
 
                 @for(page of canvas.tracks; track $index) {
-                    <div class="abs-page-container" cdkDrag (cdkDragStarted)="dragStarted($event, page.id)" [cdkDragConstrainPosition]="computeDragRenderPos.bind(this)" [ngStyle]="{'top.px': 116 + 114 * $index}">
+                    <div class="abs-page-container" cdkDrag (cdkDragStarted)="dragStarted($event, page.id)" [cdkDragConstrainPosition]="computeDragRenderPos.bind(this)" [ngStyle]="{'top.px': 116 + 114 * $index, 'left.px': pagesBeenDraggedIndicies.includes($index) ? 0 : page.start * 16}">
                         <mat-card class="page-card" [ngStyle]="{'width.px': getCardWidth(page.id)}">
                             <span class="page-card-header"></span>
                             <mat-card-content style="text-align: center;">{{ page.getPreview() }}</mat-card-content>
